@@ -1,18 +1,32 @@
-//
-//  main.cpp
-//  CGTermProject
-//
-//  Created by Kevin Sullivan on 11/11/13.
-//  Copyright (c) 2013 com.sideapps. All rights reserved.
-//
+#include <cstdlib>
+#include <cmath>
 
-#include <iostream>
+#include "Globals.h"
 
-int main(int argc, const char * argv[])
+#ifdef __APPLE__
+#  include <GLUT/glut.h>
+#else
+#  include <GL/glut.h>
+#endif
+
+void setup()
 {
-
-    // insert code here...
-    std::cout << "Hello, World!\n";
-    return 0;
+    
 }
 
+// Main routine.
+int main(int argc, char **argv)
+{
+	// create global game object
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize( 500, 500 );
+    glutInitWindowPosition(100, 100);
+    glutCreateWindow ("Empty Scene");
+    
+	game = new Game();
+    
+    glutMainLoop();
+    
+    return 0;
+}

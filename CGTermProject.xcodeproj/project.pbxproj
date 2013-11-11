@@ -9,6 +9,26 @@
 /* Begin PBXBuildFile section */
 		514994D918319B0300617170 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514994D818319B0300617170 /* main.cpp */; };
 		514994DB18319B0300617170 /* CGTermProject.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 514994DA18319B0300617170 /* CGTermProject.1 */; };
+		514994E218319B0F00617170 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514994E118319B0F00617170 /* Cocoa.framework */; };
+		514994E418319B1300617170 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514994E318319B1300617170 /* GLUT.framework */; };
+		514994E618319B1A00617170 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514994E518319B1A00617170 /* OpenGL.framework */; };
+		5149953618319B9F00617170 /* Crosshair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149951018319B9F00617170 /* Crosshair.cpp */; };
+		5149953718319B9F00617170 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149951718319B9F00617170 /* GameState.cpp */; };
+		5149953818319B9F00617170 /* BaseTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149951818319B9F00617170 /* BaseTarget.cpp */; };
+		5149953918319B9F00617170 /* Target.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149951918319B9F00617170 /* Target.cpp */; };
+		5149953A18319B9F00617170 /* RayProjectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149951B18319B9F00617170 /* RayProjectile.cpp */; };
+		5149953B18319B9F00617170 /* BaseState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149951E18319B9F00617170 /* BaseState.cpp */; };
+		5149953C18319B9F00617170 /* BaseProjectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149951F18319B9F00617170 /* BaseProjectile.cpp */; };
+		5149953D18319B9F00617170 /* ArrowProjectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149952018319B9F00617170 /* ArrowProjectile.cpp */; };
+		5149953E18319B9F00617170 /* StateHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149952218319B9F00617170 /* StateHandler.cpp */; };
+		5149953F18319B9F00617170 /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149952518319B9F00617170 /* GameObject.cpp */; };
+		5149954018319B9F00617170 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149952C18319B9F00617170 /* Camera.cpp */; };
+		5149954118319B9F00617170 /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149952D18319B9F00617170 /* Game.cpp */; };
+		5149954218319B9F00617170 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149952E18319B9F00617170 /* Plane.cpp */; };
+		5149954318319B9F00617170 /* Vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149952F18319B9F00617170 /* Vector.cpp */; };
+		5149954418319B9F00617170 /* Globals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149953018319B9F00617170 /* Globals.cpp */; };
+		5149954518319B9F00617170 /* Octree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149953118319B9F00617170 /* Octree.cpp */; };
+		5149954618319B9F00617170 /* Floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5149953218319B9F00617170 /* Floor.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +48,47 @@
 		514994D518319B0300617170 /* CGTermProject */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CGTermProject; sourceTree = BUILT_PRODUCTS_DIR; };
 		514994D818319B0300617170 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		514994DA18319B0300617170 /* CGTermProject.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = CGTermProject.1; sourceTree = "<group>"; };
+		514994E118319B0F00617170 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		514994E318319B1300617170 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		514994E518319B1A00617170 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		5149951018319B9F00617170 /* Crosshair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Crosshair.cpp; path = ../Crosshair.cpp; sourceTree = "<group>"; };
+		5149951118319B9F00617170 /* BaseTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseTarget.h; path = ../BaseTarget.h; sourceTree = "<group>"; };
+		5149951218319B9F00617170 /* TargetDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TargetDefs.h; path = ../TargetDefs.h; sourceTree = "<group>"; };
+		5149951318319B9F00617170 /* ProjectileDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectileDefs.h; path = ../ProjectileDefs.h; sourceTree = "<group>"; };
+		5149951418319B9F00617170 /* StateHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateHandler.h; path = ../StateHandler.h; sourceTree = "<group>"; };
+		5149951518319B9F00617170 /* StateDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateDefs.h; path = ../StateDefs.h; sourceTree = "<group>"; };
+		5149951618319B9F00617170 /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameState.h; path = ../GameState.h; sourceTree = "<group>"; };
+		5149951718319B9F00617170 /* GameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameState.cpp; path = ../GameState.cpp; sourceTree = "<group>"; };
+		5149951818319B9F00617170 /* BaseTarget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseTarget.cpp; path = ../BaseTarget.cpp; sourceTree = "<group>"; };
+		5149951918319B9F00617170 /* Target.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Target.cpp; path = ../Target.cpp; sourceTree = "<group>"; };
+		5149951A18319B9F00617170 /* Target.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Target.h; path = ../Target.h; sourceTree = "<group>"; };
+		5149951B18319B9F00617170 /* RayProjectile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RayProjectile.cpp; path = ../RayProjectile.cpp; sourceTree = "<group>"; };
+		5149951C18319B9F00617170 /* RayProjectile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RayProjectile.h; path = ../RayProjectile.h; sourceTree = "<group>"; };
+		5149951D18319B9F00617170 /* BaseProjectile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseProjectile.h; path = ../BaseProjectile.h; sourceTree = "<group>"; };
+		5149951E18319B9F00617170 /* BaseState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseState.cpp; path = ../BaseState.cpp; sourceTree = "<group>"; };
+		5149951F18319B9F00617170 /* BaseProjectile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseProjectile.cpp; path = ../BaseProjectile.cpp; sourceTree = "<group>"; };
+		5149952018319B9F00617170 /* ArrowProjectile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ArrowProjectile.cpp; path = ../ArrowProjectile.cpp; sourceTree = "<group>"; };
+		5149952118319B9F00617170 /* ArrowProjectile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArrowProjectile.h; path = ../ArrowProjectile.h; sourceTree = "<group>"; };
+		5149952218319B9F00617170 /* StateHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StateHandler.cpp; path = ../StateHandler.cpp; sourceTree = "<group>"; };
+		5149952318319B9F00617170 /* Crosshair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Crosshair.h; path = ../Crosshair.h; sourceTree = "<group>"; };
+		5149952418319B9F00617170 /* GameObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameObject.h; path = ../GameObject.h; sourceTree = "<group>"; };
+		5149952518319B9F00617170 /* GameObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameObject.cpp; path = ../GameObject.cpp; sourceTree = "<group>"; };
+		5149952618319B9F00617170 /* BaseState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseState.h; path = ../BaseState.h; sourceTree = "<group>"; };
+		5149952718319B9F00617170 /* Point3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3D.h; path = ../Point3D.h; sourceTree = "<group>"; };
+		5149952818319B9F00617170 /* Plane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plane.h; path = ../Plane.h; sourceTree = "<group>"; };
+		5149952918319B9F00617170 /* Floor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Floor.h; path = ../Floor.h; sourceTree = "<group>"; };
+		5149952A18319B9F00617170 /* Octree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Octree.h; path = ../Octree.h; sourceTree = "<group>"; };
+		5149952B18319B9F00617170 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../Vector.h; sourceTree = "<group>"; };
+		5149952C18319B9F00617170 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = ../Camera.cpp; sourceTree = "<group>"; };
+		5149952D18319B9F00617170 /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Game.cpp; path = ../Game.cpp; sourceTree = "<group>"; };
+		5149952E18319B9F00617170 /* Plane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plane.cpp; path = ../Plane.cpp; sourceTree = "<group>"; };
+		5149952F18319B9F00617170 /* Vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Vector.cpp; path = ../Vector.cpp; sourceTree = "<group>"; };
+		5149953018319B9F00617170 /* Globals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Globals.cpp; path = ../Globals.cpp; sourceTree = "<group>"; };
+		5149953118319B9F00617170 /* Octree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Octree.cpp; path = ../Octree.cpp; sourceTree = "<group>"; };
+		5149953218319B9F00617170 /* Floor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Floor.cpp; path = ../Floor.cpp; sourceTree = "<group>"; };
+		5149953318319B9F00617170 /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Globals.h; path = ../Globals.h; sourceTree = "<group>"; };
+		5149953418319B9F00617170 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../Camera.h; sourceTree = "<group>"; };
+		5149953518319B9F00617170 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Game.h; path = ../Game.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +96,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				514994E618319B1A00617170 /* OpenGL.framework in Frameworks */,
+				514994E418319B1300617170 /* GLUT.framework in Frameworks */,
+				514994E218319B0F00617170 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +108,9 @@
 		514994CC18319B0300617170 = {
 			isa = PBXGroup;
 			children = (
+				514994E518319B1A00617170 /* OpenGL.framework */,
+				514994E318319B1300617170 /* GLUT.framework */,
+				514994E118319B0F00617170 /* Cocoa.framework */,
 				514994D718319B0300617170 /* CGTermProject */,
 				514994D618319B0300617170 /* Products */,
 			);
@@ -60,6 +127,44 @@
 		514994D718319B0300617170 /* CGTermProject */ = {
 			isa = PBXGroup;
 			children = (
+				5149951018319B9F00617170 /* Crosshair.cpp */,
+				5149951118319B9F00617170 /* BaseTarget.h */,
+				5149951218319B9F00617170 /* TargetDefs.h */,
+				5149951318319B9F00617170 /* ProjectileDefs.h */,
+				5149951418319B9F00617170 /* StateHandler.h */,
+				5149951518319B9F00617170 /* StateDefs.h */,
+				5149951618319B9F00617170 /* GameState.h */,
+				5149951718319B9F00617170 /* GameState.cpp */,
+				5149951818319B9F00617170 /* BaseTarget.cpp */,
+				5149951918319B9F00617170 /* Target.cpp */,
+				5149951A18319B9F00617170 /* Target.h */,
+				5149951B18319B9F00617170 /* RayProjectile.cpp */,
+				5149951C18319B9F00617170 /* RayProjectile.h */,
+				5149951D18319B9F00617170 /* BaseProjectile.h */,
+				5149951E18319B9F00617170 /* BaseState.cpp */,
+				5149951F18319B9F00617170 /* BaseProjectile.cpp */,
+				5149952018319B9F00617170 /* ArrowProjectile.cpp */,
+				5149952118319B9F00617170 /* ArrowProjectile.h */,
+				5149952218319B9F00617170 /* StateHandler.cpp */,
+				5149952318319B9F00617170 /* Crosshair.h */,
+				5149952418319B9F00617170 /* GameObject.h */,
+				5149952518319B9F00617170 /* GameObject.cpp */,
+				5149952618319B9F00617170 /* BaseState.h */,
+				5149952718319B9F00617170 /* Point3D.h */,
+				5149952818319B9F00617170 /* Plane.h */,
+				5149952918319B9F00617170 /* Floor.h */,
+				5149952A18319B9F00617170 /* Octree.h */,
+				5149952B18319B9F00617170 /* Vector.h */,
+				5149952C18319B9F00617170 /* Camera.cpp */,
+				5149952D18319B9F00617170 /* Game.cpp */,
+				5149952E18319B9F00617170 /* Plane.cpp */,
+				5149952F18319B9F00617170 /* Vector.cpp */,
+				5149953018319B9F00617170 /* Globals.cpp */,
+				5149953118319B9F00617170 /* Octree.cpp */,
+				5149953218319B9F00617170 /* Floor.cpp */,
+				5149953318319B9F00617170 /* Globals.h */,
+				5149953418319B9F00617170 /* Camera.h */,
+				5149953518319B9F00617170 /* Game.h */,
 				514994D818319B0300617170 /* main.cpp */,
 				514994DA18319B0300617170 /* CGTermProject.1 */,
 			);
@@ -117,7 +222,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5149954418319B9F00617170 /* Globals.cpp in Sources */,
+				5149953618319B9F00617170 /* Crosshair.cpp in Sources */,
+				5149953A18319B9F00617170 /* RayProjectile.cpp in Sources */,
+				5149954318319B9F00617170 /* Vector.cpp in Sources */,
+				5149953F18319B9F00617170 /* GameObject.cpp in Sources */,
+				5149953B18319B9F00617170 /* BaseState.cpp in Sources */,
+				5149954018319B9F00617170 /* Camera.cpp in Sources */,
+				5149953818319B9F00617170 /* BaseTarget.cpp in Sources */,
+				5149953918319B9F00617170 /* Target.cpp in Sources */,
+				5149954118319B9F00617170 /* Game.cpp in Sources */,
+				5149954618319B9F00617170 /* Floor.cpp in Sources */,
+				5149954518319B9F00617170 /* Octree.cpp in Sources */,
+				5149953718319B9F00617170 /* GameState.cpp in Sources */,
+				5149953E18319B9F00617170 /* StateHandler.cpp in Sources */,
+				5149953D18319B9F00617170 /* ArrowProjectile.cpp in Sources */,
 				514994D918319B0300617170 /* main.cpp in Sources */,
+				5149954218319B9F00617170 /* Plane.cpp in Sources */,
+				5149953C18319B9F00617170 /* BaseProjectile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +317,7 @@
 		514994DF18319B0300617170 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -202,6 +325,7 @@
 		514994E018319B0300617170 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
