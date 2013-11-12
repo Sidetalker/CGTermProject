@@ -7,6 +7,7 @@ struct Projectiles
 	enum id
 	{
 		BUBBLE,
+		ARROW,
 		RAY,
 		
 		NUM_PROJECTILES,

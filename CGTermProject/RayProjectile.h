@@ -10,7 +10,10 @@ public:
 	~RayProjectile();
 
 	virtual void draw();
-	virtual void checkCollisions(  );
+	virtual void checkCollisions( BaseTarget* targets[], uint numTargets );
+
+private:
+
 };
 
 #endif

@@ -10,6 +10,7 @@ public:
 	~ArrowProjectile();
 
 	virtual void draw();
+	virtual void checkCollisions( BaseTarget* targets[], uint numTargets );
 
 private:
 

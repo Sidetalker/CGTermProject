@@ -1,6 +1,5 @@
 #include "Crosshair.h"
 #include <iostream>
-#include <cmath>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>

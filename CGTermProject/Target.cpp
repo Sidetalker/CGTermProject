@@ -6,6 +6,8 @@
 #include <GL/glut.h>
 #endif
 
+static const float THICKNESS = 0.5;
+
 // Target default constructor
 Target::Target() :
   BaseTarget( 0.0, 0.0, 0.0 )
@@ -21,6 +23,8 @@ Target::Target(float x, float y, float z, float r, unsigned char colorR,
 				   unsigned char colorG, unsigned char colorB) :
   BaseTarget( x, y, z )
 , m_radius( r )
+, m_nearPlane() // TODO: make actual plane
+, m_farPlane()  // TODO: make actual plane
 {
     color[ 0 ] = colorR;
     color[ 1 ] = colorG;
@@ -37,7 +41,7 @@ void Target::draw()
         glColor3ubv( color );
         GLUquadricObj *p = gluNewQuadric(); // Create a quadratic for the cylinder
         gluQuadricDrawStyle( p, GLU_FILL ); // Draw the quadratic as a wireframe
-        gluCylinder( p, m_radius, m_radius, 0.5, 30, 2 ); // Draw the target
+        gluCylinder( p, m_radius, m_radius, THICKNESS, 30, 2 ); // Draw the target
         gluDisk( p, 0, m_radius, 100, 100 ); // Draw the target face
         glPopMatrix();
         

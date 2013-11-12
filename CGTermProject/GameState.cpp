@@ -20,10 +20,12 @@ float projectileStep = 0.0;
 
 GameState::GameState() :
   m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
+, m_score( 0 )
 ,  clickX( 0 )
 , clickY( 0 )
 , clickZ( 0 )
 , m_pCrosshair( new Crosshair() )
+, m_activeProjectiles()
 //, m_objects( new Octree(0,0,0,0,0,0,0) )
 {
 	setup();
@@ -31,11 +33,19 @@ GameState::GameState() :
 
 GameState::~GameState()
 {
+	// free crosshair memory
 	delete m_pCrosshair;
 
-	for ( int i = 0; i < m_numTargets; i++ )
+	// free target memory
+	for ( uint i = 0; i < m_numTargets; ++i )
 	{
-		delete arrayTargets[i];
+		delete arrayTargets[ i ];
+	}
+
+	// free projectile memory
+	for ( uint i = 0; i < m_activeProjectiles.size(); ++i )
+	{
+		delete m_activeProjectiles[ i ];
 	}
 	
 }
@@ -96,7 +106,8 @@ void GameState::update()
     // Draw targets
     for (int i = 0; i < TARGET_COUNT; i++)
     {
-        arrayTargets[i]->draw();
+		if ( !arrayTargets[ i ]->getIsHit() )
+			arrayTargets[i]->draw();
     }
     
 	// Draw crosshair
@@ -322,6 +333,7 @@ void GameState::testDrawProjectile()
 			if ( (position - Vector(arrayTargets[i]->getCenterX(), arrayTargets[i]->getCenterY(), -arrayTargets[i]->getCenterZ() )).magnitude() < 1 )
 			{
 				std::cout << "HIT!\n";
+				arrayTargets[ i ]->setIsHit( true );
 			}
 		}
 		glTranslatef(projectileStep * dx, projectileStep * dy, projectileStep * dz);

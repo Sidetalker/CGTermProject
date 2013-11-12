@@ -2,6 +2,7 @@
 #define H_TARGET
 
 #include "BaseTarget.h"
+#include "Plane.h"
 
 // Target class.
 class Target : public BaseTarget
@@ -15,6 +16,9 @@ public:
     
 private:
 	float m_radius;
+	Plane m_nearPlane;
+	Plane m_farPlane;
+
     unsigned char color[ 3 ];
 };
 

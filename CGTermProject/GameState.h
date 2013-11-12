@@ -1,9 +1,11 @@
 #ifndef H_GAME_STATE
 #define H_GAME_STATE
 
+#include <vector>
+
+#include "BaseProjectile.h"
 #include "BaseState.h"
 #include "Target.h"
-#include "Octree.h"
 #include "Crosshair.h"
 
 #define TARGET_COUNT 5 // TODO: remove dependency
@@ -23,16 +25,19 @@ private:
 
 	unsigned int m_numTargets;
 
+	int m_score;
+
 	float clickX;
 	float clickY;
 	float clickZ;
-
-	Octree* m_objects;
 
 	Crosshair* m_pCrosshair;
 
 	// Global array of targets
 	BaseTarget* arrayTargets[ TARGET_COUNT ];
+
+	std::vector< BaseProjectile* > m_activeProjectiles;
+
 
 	void testDrawShot();
 	void testDrawProjectile();

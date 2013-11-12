@@ -4,8 +4,9 @@
 #include <vector>
 
 #include "GameObject.h"
+#include "BaseTarget.h"
 #include "Vector.h"
-#include "Octree.h"
+#include "ProjectileDefs.h"
 
 class BaseProjectile : public GameObject
 {
@@ -15,9 +16,15 @@ public:
 
 	void setVelocity( Vector velocity ) { m_velocity = velocity; }
 
-	virtual void checkCollisions( Octree* targets ) = 0; // TODO: takes octree pointer to check collisions?
+	// TODO:
+	// Purpose: flags all hit targets as hit
+	virtual void checkCollisions( BaseTarget* targets[], uint numTargets ) = 0;
 
 protected:
+
+	// type of projectile
+	Projectiles::id m_type;
+
 	Vector m_velocity;
 
 };
