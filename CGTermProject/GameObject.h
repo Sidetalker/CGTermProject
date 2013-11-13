@@ -21,6 +21,8 @@ public:
 	void setCenterY( float centerY );
 	void setCenterZ( float centerZ );
 
+	Vector getCenter() const { return m_center; }
+
 protected:
 	Vector m_center;
 };

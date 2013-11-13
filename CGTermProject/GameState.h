@@ -2,6 +2,7 @@
 #define H_GAME_STATE
 
 #include <vector>
+#include <list>
 
 #include "BaseProjectile.h"
 #include "BaseState.h"
@@ -36,13 +37,15 @@ private:
 	// Global array of targets
 	BaseTarget* arrayTargets[ TARGET_COUNT ];
 
-	std::vector< BaseProjectile* > m_activeProjectiles;
+	std::list< BaseProjectile* > m_activeProjectiles;
 
-
-	void testDrawShot();
-	void testDrawProjectile();
-
+	void updateActiveProjectiles();
+	void drawActiveProjectiles();
+	
 	void setup();
+
+	// TODO: remove later...
+	void testDrawShot();
 };
 
 #endif

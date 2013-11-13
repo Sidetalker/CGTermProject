@@ -12,3 +12,9 @@ BaseProjectile::BaseProjectile( Vector center ) :
 BaseProjectile::~BaseProjectile()
 {
 }
+
+// moves projectile to next position based on velocity
+void BaseProjectile::applyVelocity()
+{
+	m_center = m_center + m_velocity;
+}

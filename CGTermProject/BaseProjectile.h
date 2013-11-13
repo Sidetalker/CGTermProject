@@ -20,13 +20,14 @@ public:
 	// Purpose: flags all hit targets as hit
 	virtual void checkCollisions( BaseTarget* targets[], uint numTargets ) = 0;
 
+	void applyVelocity();
+
 protected:
 
 	// type of projectile
 	Projectiles::id m_type;
 
 	Vector m_velocity;
-
 };
 
 #endif

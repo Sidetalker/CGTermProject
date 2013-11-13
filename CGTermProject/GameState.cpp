@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Vector.h"
 #include "Crosshair.h"
+#include "BubbleProjectile.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -15,9 +16,6 @@
 // outermost scene rotation FOR TESTING PURPOSES ONLY
 float Yangle = 0;
 
-// global step counter just FOR TESTING PURPOSES ONLY
-float projectileStep = 0.0;
-
 GameState::GameState() :
   m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
 , m_score( 0 )
@@ -26,7 +24,6 @@ GameState::GameState() :
 , clickZ( 0 )
 , m_pCrosshair( new Crosshair() )
 , m_activeProjectiles()
-//, m_objects( new Octree(0,0,0,0,0,0,0) )
 {
 	setup();
 }
@@ -43,9 +40,9 @@ GameState::~GameState()
 	}
 
 	// free projectile memory
-	for ( uint i = 0; i < m_activeProjectiles.size(); ++i )
+	for ( std::list< BaseProjectile* >::iterator i = m_activeProjectiles.begin(); i != m_activeProjectiles.end(); ++i )
 	{
-		delete m_activeProjectiles[ i ];
+		delete ( *i );
 	}
 	
 }
@@ -103,6 +100,10 @@ void GameState::update()
         i++;
     }
     
+	updateActiveProjectiles();
+	drawActiveProjectiles();
+
+
     // Draw targets
     for (int i = 0; i < TARGET_COUNT; i++)
     {
@@ -113,18 +114,19 @@ void GameState::update()
 	// Draw crosshair
 	m_pCrosshair->draw();
 
-	// FOR TESTING PURPOSES ONLY draw ray and projectile from eye through point clicked
+	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
 	testDrawShot();
-	testDrawProjectile();
 
     glFlush();
 }
 
-void GameState::mouseAction( int button, int state, int x, int y )
+void GameState::mouseAction( int button, int state, int x, int y ) // TODO: cleanup using Vector class instead of many floats
 {
 	const float eyeX = game->getCamera()->getPosX();
 	const float eyeY = game->getCamera()->getPosY();
 	const float eyeZ = game->getCamera()->getPosZ();
+
+	const Vector eyePos( eyeX, eyeY, eyeZ );
 
 	const float frustumWidth = game->getCamera()->getFrustumWidth();
 	const float frustumHalfWidth = game->getCamera()->getFrustumHalfWidth();
@@ -139,10 +141,13 @@ void GameState::mouseAction( int button, int state, int x, int y )
 
 	if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
 	{
-		clickX = (x + ((eyeX / (frustumHalfWidth))*(windowHalfWidth) - (windowHalfWidth)))/(windowWidth/frustumWidth);
-		clickY = -(y - ((eyeY / (frustumHalfHeight))*(windowHalfHeight) + (windowHalfHeight)))/(windowHeight/frustumHeight);
+		clickX = ( x + ( ( eyeX / ( frustumHalfWidth ) ) * ( windowHalfWidth ) - ( windowHalfWidth ) ) ) / ( windowWidth / frustumWidth );
+		clickY = -( y - ( ( eyeY / ( frustumHalfHeight ) ) * ( windowHalfHeight ) + ( windowHalfHeight ) ) ) / ( windowHeight / frustumHeight );
 		clickZ = eyeZ - frustumNear;
-		projectileStep = 0.0; // FOR TESTING PURPOSES ONLY
+
+		BaseProjectile* p = new BubbleProjectile( eyePos );
+		p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ).unit() );
+		m_activeProjectiles.push_back( p );
 	}
 
 	glutPostRedisplay();
@@ -209,6 +214,40 @@ void GameState::keyInput( unsigned char key, int x, int y )
     }
 }
 
+void GameState::updateActiveProjectiles()
+{
+	std::list< BaseProjectile* >::iterator i = m_activeProjectiles.begin();
+
+	// iterate over all projectiles
+	while ( i != m_activeProjectiles.end() )
+	{
+		// if out of frustum bounds
+		if ( ( *i )->getCenterZ() < -game->getCamera()->getFrustumFar() )
+		{
+			// free memory!
+			delete ( *i );
+			// remove from list
+			i = m_activeProjectiles.erase( i );
+		}
+		// if in bounds
+		else
+		{
+			// apply collision testing and velocity
+			( *i )->checkCollisions( arrayTargets, TARGET_COUNT );
+			( *i )->applyVelocity();
+			++i;
+		}
+	}
+}
+
+void GameState::drawActiveProjectiles()
+{
+	for ( std::list< BaseProjectile* >::iterator i = m_activeProjectiles.begin(); i != m_activeProjectiles.end(); ++i )
+	{
+		( *i )->draw();
+	}
+}
+
 // Initialization routine.
 void GameState::setup()
 {
@@ -273,13 +312,6 @@ void GameState::setup()
 // TESTING FUNCTIONS //
 ///////////////////////
 
-
-
-
-
-
-
-
 // function to draw ray from eye to viewplane FOR TESTING PURPOSES ONLY
 void GameState::testDrawShot()
 {
@@ -298,46 +330,4 @@ void GameState::testDrawShot()
 		glVertex3f(eyeX, eyeY, eyeZ);
 		glVertex3f(eyeX + (10 * dx), eyeY + (10 *dy), eyeZ + (10 * dz));
 	glEnd();
-}
-
-
-static Vector projectilePos(0,0,0);
-static Vector projectileVel(0,0,0);
-
-// funtion to draw "projectile" FOR TESTING PURPOSES ONLY
-void GameState::testDrawProjectile()
-{
-	const float eyeX = game->getCamera()->getPosX();
-	const float eyeY = game->getCamera()->getPosY();
-	const float eyeZ = game->getCamera()->getPosZ();
-
-	float dx = clickX - eyeX;
-	float dy = clickY - eyeY;
-	float dz = clickZ - eyeZ;
-
-	float magnitude = sqrt(dx * dx + dy * dy + dz * dz);
-
-	dx /= magnitude;
-	dy /= magnitude;
-	dz /= magnitude;
-
-	Vector position(projectileStep * dx, projectileStep * dy + 5, projectileStep * dz + 30); // TODO: make "actual" coordinates of projectile
-
-	glColor3f(0,1,0);
-
-	glPushMatrix();
-		glTranslatef(eyeX, eyeY, eyeZ); // TODO: make "actual" coordinates of projectile
-		for ( int i=0; i<TARGET_COUNT; i++ )
-		{
-			// TODO: make target z value positive
-			if ( (position - Vector(arrayTargets[i]->getCenterX(), arrayTargets[i]->getCenterY(), -arrayTargets[i]->getCenterZ() )).magnitude() < 1 )
-			{
-				std::cout << "HIT!\n";
-				arrayTargets[ i ]->setIsHit( true );
-			}
-		}
-		glTranslatef(projectileStep * dx, projectileStep * dy, projectileStep * dz);
-		glutSolidSphere(1, 10, 10);
-	glPopMatrix();
-	projectileStep += 3;
 }
