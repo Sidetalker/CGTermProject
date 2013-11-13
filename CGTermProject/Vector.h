@@ -14,15 +14,20 @@ public:
 
 	Vector operator+( const Vector& other ) const;
 	Vector operator-( const Vector& other ) const;
+	Vector operator*( float scalar ) const;
 
     Vector crossProduct( const Vector& other ) const;
     float dotProduct( const Vector& other ) const;
     float magnitude() const;
 	Vector unit() const;
 
+	Vector getRotatedVector( const Vector& axis, float angle ) const;
+
 	float getX() const { return m_x; }
 	float getY() const { return m_y; }
 	float getZ() const { return m_z; }
+
+	void print() const;
 
 private:
     float m_x;  // x coordinate

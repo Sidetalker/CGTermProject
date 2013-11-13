@@ -22,12 +22,12 @@ void setup()
 int main(int argc, char **argv)
 {
 	// TESTING TODO: remove
-	Plane test( Vector( 1, 2, 3 ), Vector( -3, 5, -1) );
-	Line testLine( Vector( 0, 0, 0 ), Vector( .1, .1, .1 ) );
+	//Plane test( Vector( 1, 2, 3 ), Vector( -3, 5, -1) );
+	//Line testLine( Vector( 0, 0, 0 ), Vector( .1, .1, .1 ) );
 
-	std::cout << test.vectorIntersect( testLine ).getX() << " " <<
-		test.vectorIntersect( testLine ).getY() << " " <<
-		test.vectorIntersect( testLine ).getZ() << '\n';
+	//std::cout << test.vectorIntersect( testLine ).getX() << " " <<
+	//	test.vectorIntersect( testLine ).getY() << " " <<
+	//	test.vectorIntersect( testLine ).getZ() << '\n';
 	// TESTING
 
 
