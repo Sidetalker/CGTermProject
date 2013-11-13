@@ -301,9 +301,9 @@ void loadExternalTextures()
     BitMapFile *image[TEXTURE_COUNT];
     
     // Load the textures.
-    image[0] = getBMPData("/Users/sideslapd/Desktop/CGTermProject/CGTermProject/Textures/RoundTargetTexture.bmp");
+    image[0] = getBMPData("/Users/sideslapd/Desktop/CGTermProject/CGTermProject/Textures/RoundTargetTexture.bmp"); // Must be set manually
     
-    // Bind grass image to texture index[0].
+    // Bind target image to texture index[0].
     glBindTexture(GL_TEXTURE_2D, texture[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
