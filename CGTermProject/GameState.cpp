@@ -6,6 +6,7 @@
 #include "Vector.h"
 #include "Crosshair.h"
 #include "BubbleProjectile.h"
+#include "RayProjectile.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -145,8 +146,8 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 		clickY = -( y - ( ( eyeY / ( frustumHalfHeight ) ) * ( windowHalfHeight ) + ( windowHalfHeight ) ) ) / ( windowHeight / frustumHeight );
 		clickZ = eyeZ - frustumNear;
 
-		BaseProjectile* p = new BubbleProjectile( eyePos );
-		p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ).unit() );
+		BaseProjectile* p = new RayProjectile( eyePos );
+		p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ).unit() ); // TODO: Task #2
 		m_activeProjectiles.push_back( p );
 	}
 
@@ -298,8 +299,8 @@ void GameState::setup()
     
     // Initialize targets TODO: change to be explicit heap pointers
     arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 255, 0, 0 );
-    arrayTargets[1] = new Target( Vector( 10.0, 5.0, -15.0 ), 2.0, 255, 0, 0 );
-    arrayTargets[2] = new Target( Vector( -10.0, 5.0, -10.0 ), 2.0, 255, 0, 0 );
+    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, 255, 0, 0 );
+    arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 255, 0, 0 );
     arrayTargets[3] = new Target();
     arrayTargets[4] = new Target();
 }

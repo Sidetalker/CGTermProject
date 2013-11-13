@@ -13,6 +13,9 @@ public:
              unsigned char colorG, unsigned char colorB );
     float getRadius()  { return m_radius; }
     virtual void draw();
+
+	Plane getNearPlane() const { return m_nearPlane; }
+	Plane getFarPlane() const { return m_farPlane; }
     
 private:
 	float m_radius;

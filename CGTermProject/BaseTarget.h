@@ -8,16 +8,21 @@ class BaseTarget : public GameObject
 {
 public:
 	BaseTarget( Vector center );
+	BaseTarget( Vector center, Vector rotAxis, float rotAngle );
 	~BaseTarget();
 
 	Targets::id getType() const { return m_type; }
 	bool getIsHit() const { return m_bIsHit; }
 	void setIsHit( const bool isHit ) { m_bIsHit = isHit; }
 
-private:
-	bool m_bIsHit;	
-
+protected:
 	Targets::id m_type;
+
+private:
+	bool m_bIsHit;
+
+	float m_rotAngle;
+	Vector m_rotAxis;
 };
 
 #endif

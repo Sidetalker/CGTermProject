@@ -38,8 +38,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 	// TODO: this is a naiive check, improve on it
 	for ( uint i = 0; i < numTargets; ++i )
 	{
-		// TODO: make target z value positive
-		if ( ( m_center - Vector( targets[ i ]->getCenterX(), targets[ i ]->getCenterY(), -targets[ i ]->getCenterZ() ) ).magnitude() < 1 )
+		if ( ( m_center - Vector( targets[ i ]->getCenterX(), targets[ i ]->getCenterY(), targets[ i ]->getCenterZ() ) ).magnitude() < 1 )
 		{
 			targets[ i ]->setIsHit( true );
 		}

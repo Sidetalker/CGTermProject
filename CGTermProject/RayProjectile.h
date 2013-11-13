@@ -3,7 +3,7 @@
 
 #include "BaseProjectile.h"
 
-class RayProjectile : BaseProjectile
+class RayProjectile : public BaseProjectile
 {
 public:
 	RayProjectile( Vector center );

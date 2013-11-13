@@ -16,7 +16,7 @@ public:
 	Plane( const Vector& point1, const Vector& point2, const Vector& point3 );
 	~Plane();
 
-	Vector vectorIntersect( const Line& testLine ) const;
+	Vector lineIntersect( const Line& testLine ) const;
 	Plane getRotatedPlane( const Vector& axis, float angle ) const;
 
 	Vector getPoint() const { return m_point; }

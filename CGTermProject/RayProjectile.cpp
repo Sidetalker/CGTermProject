@@ -1,5 +1,8 @@
 #include "RayProjectile.h"
 
+#include <cmath>
+
+#include "Target.h"
 #include "Plane.h"
 
 
@@ -29,6 +32,13 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 		{
 			case Targets::BULLSEYE:
 			{
+				Target* t = ( Target* ) targets[ i ];
+				Vector intersection = t->getNearPlane().lineIntersect( Line( m_center, m_velocity ) );
+
+				if ( ( intersection - t->getNearPlane().getPoint() ).magnitude() <= t->getRadius() )
+				{
+					targets[ i ]->setIsHit( true );
+				}
 				break;
 			}
 			default:

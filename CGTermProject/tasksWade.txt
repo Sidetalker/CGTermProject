@@ -1,0 +1,3 @@
+1) make all destructors virtual
+2) fix how velocity of a projectile is set
+	velocity could be a fixed magnitude from start, but direction is set from click

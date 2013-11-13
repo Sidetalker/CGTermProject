@@ -16,7 +16,7 @@ Plane::~Plane()
 }
 
 // returns point on plane of line intersection
-Vector Plane::vectorIntersect( const Line& testLine ) const
+Vector Plane::lineIntersect( const Line& testLine ) const
 {
 	float t = ( ( m_normal.getX() * ( testLine.getPoint().getX() - m_point.getX() ) ) +
 	            ( m_normal.getY() * ( testLine.getPoint().getY() - m_point.getY() ) ) +
