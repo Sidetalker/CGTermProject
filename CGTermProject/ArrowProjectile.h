@@ -6,7 +6,7 @@
 class ArrowProjectile : public BaseProjectile
 {
 public:
-	ArrowProjectile( float centerX, float centerY, float centerZ );
+	ArrowProjectile( Vector center );
 	~ArrowProjectile();
 
 	virtual void draw();

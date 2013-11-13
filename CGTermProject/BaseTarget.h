@@ -7,7 +7,7 @@
 class BaseTarget : public GameObject
 {
 public:
-	BaseTarget( float x, float y, float z );
+	BaseTarget( Vector center );
 	~BaseTarget();
 
 	Targets::id getType() const { return m_type; }
@@ -15,7 +15,7 @@ public:
 	void setIsHit( const bool isHit ) { m_bIsHit = isHit; }
 
 private:
-	bool m_bIsHit;
+	bool m_bIsHit;	
 
 	Targets::id m_type;
 };

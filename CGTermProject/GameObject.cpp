@@ -1,13 +1,26 @@
 #include "GameObject.h"
 
-GameObject::GameObject( float centerX, float centerY, float centerZ ) :
-  m_centerX( centerX )
-, m_centerY( centerY )
-, m_centerZ( centerZ )
+GameObject::GameObject( Vector center ) :
+  m_center( center )
 {
 }
 
 
 GameObject::~GameObject()
 {
+}
+
+void GameObject::setCenterX( float centerX )
+{
+	m_center = Vector( centerX, getCenterY(), getCenterZ() );
+}
+
+void GameObject::setCenterY( float centerY )
+{
+	m_center = Vector( getCenterX(), centerY, getCenterZ() );
+}
+
+void GameObject::setCenterZ( float centerZ )
+{
+	m_center = Vector( getCenterX(), getCenterY(), centerZ );
 }

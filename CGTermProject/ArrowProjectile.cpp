@@ -1,8 +1,8 @@
 #include "ArrowProjectile.h"
 
 
-ArrowProjectile::ArrowProjectile( float centerX, float centerY, float centerZ ) :
-  BaseProjectile( centerX, centerY, centerZ )
+ArrowProjectile::ArrowProjectile( Vector center ) :
+  BaseProjectile( center )
 {
 	m_type = Projectiles::ARROW;
 }

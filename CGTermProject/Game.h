@@ -10,7 +10,7 @@ public:
 	Game();
 	~Game();
 
-	Camera* getCamera() { return m_pCamera; }
+	Camera* getCamera() const { return m_pCamera; }
 
 private:
 	Camera* m_pCamera;

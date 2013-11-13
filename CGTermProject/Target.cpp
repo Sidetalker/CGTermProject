@@ -10,7 +10,7 @@ static const float THICKNESS = 0.5;
 
 // Target default constructor
 Target::Target() :
-  BaseTarget( 0.0, 0.0, 0.0 )
+  BaseTarget( Vector() )
 , m_radius( 0.0 ) // Indicates no target exists in the position.
 {
     color[ 0 ] = 0;
@@ -19,9 +19,9 @@ Target::Target() :
 }
 
 // Target constructor
-Target::Target(float x, float y, float z, float r, unsigned char colorR,
-				   unsigned char colorG, unsigned char colorB) :
-  BaseTarget( x, y, z )
+Target::Target( Vector center, float r, unsigned char colorR,
+				   unsigned char colorG, unsigned char colorB ) :
+  BaseTarget( center )
 , m_radius( r )
 , m_nearPlane() // TODO: make actual plane
 , m_farPlane()  // TODO: make actual plane
@@ -37,7 +37,7 @@ void Target::draw()
     if ( m_radius > 0.0 ) // If target exists.
     {
         glPushMatrix();
-        glTranslatef( m_centerX, m_centerY, -m_centerZ );
+        glTranslatef( getCenterX(), getCenterY(), -getCenterZ() );
         glColor3ubv( color );
         GLUquadricObj *p = gluNewQuadric(); // Create a quadratic for the cylinder
         gluQuadricDrawStyle( p, GLU_FILL ); // Draw the quadratic as a wireframe

@@ -258,9 +258,9 @@ void GameState::setup()
     // End lighting stuff
     
     // Initialize targets TODO: change to be explicit heap pointers
-    arrayTargets[0] = new Target( 0.0, 5.0, 0.0, 2.0, 255, 0, 0 );
-    arrayTargets[1] = new Target( 10.0, 5.0, -15.0, 2.0, 255, 0, 0 );
-    arrayTargets[2] = new Target( -10.0, 5.0, -10.0, 2.0, 255, 0, 0 );
+    arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 255, 0, 0 );
+    arrayTargets[1] = new Target( Vector( 10.0, 5.0, -15.0 ), 2.0, 255, 0, 0 );
+    arrayTargets[2] = new Target( Vector( -10.0, 5.0, -10.0 ), 2.0, 255, 0, 0 );
     arrayTargets[3] = new Target();
     arrayTargets[4] = new Target();
 }

@@ -3,8 +3,8 @@
 #include "Plane.h"
 
 
-RayProjectile::RayProjectile( float centerX, float centerY, float centerZ ) :
-  BaseProjectile( centerX, centerY, centerZ )
+RayProjectile::RayProjectile( Vector center ) :
+  BaseProjectile( center )
 {
 	m_type = Projectiles::RAY;
 }

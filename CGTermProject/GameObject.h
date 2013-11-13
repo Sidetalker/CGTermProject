@@ -3,26 +3,26 @@
 
 #include "Typedefs.h"
 
+#include "Vector.h"
+
 class GameObject
 {
 public:
-	GameObject( float centerX, float centerY, float centerZ );
+	GameObject( Vector center );
 	~GameObject();
 
 	virtual void draw() = 0;
 
-	float getCenterX() { return m_centerX; } const
-	float getCenterY() { return m_centerY; } const
-	float getCenterZ() { return m_centerZ; } const
+	float getCenterX() const { return m_center.getX(); }
+	float getCenterY() const { return m_center.getY(); }
+	float getCenterZ() const { return m_center.getZ(); }
 
-	void setCenterX( float centerX ) { m_centerX = centerX; }
-	void setCenterY( float centerY ) { m_centerY = centerY; }
-	void setCenterZ( float centerZ ) { m_centerZ = centerZ; }
+	void setCenterX( float centerX );
+	void setCenterY( float centerY );
+	void setCenterZ( float centerZ );
 
 protected:
-	float m_centerX;
-	float m_centerY;
-	float m_centerZ;
+	Vector m_center;
 };
 
 #endif

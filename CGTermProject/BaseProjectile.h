@@ -11,7 +11,7 @@
 class BaseProjectile : public GameObject
 {
 public:
-	BaseProjectile( float centerX, float centerY, float centerZ );
+	BaseProjectile( Vector center );
 	~BaseProjectile();
 
 	void setVelocity( Vector velocity ) { m_velocity = velocity; }

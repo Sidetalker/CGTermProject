@@ -6,7 +6,7 @@
 class RayProjectile : BaseProjectile
 {
 public:
-	RayProjectile( float centerX, float centerY, float centerZ );
+	RayProjectile( Vector center );
 	~RayProjectile();
 
 	virtual void draw();
