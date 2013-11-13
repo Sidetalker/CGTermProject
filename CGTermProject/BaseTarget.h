@@ -18,11 +18,11 @@ public:
 protected:
 	Targets::id m_type;
 
-private:
-	bool m_bIsHit;
-
 	float m_rotAngle;
 	Vector m_rotAxis;
+
+private:
+	bool m_bIsHit;
 };
 
 #endif

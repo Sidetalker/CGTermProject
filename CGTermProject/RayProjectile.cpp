@@ -30,15 +30,27 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 	{
 		switch ( targets[ i ]->getType() )
 		{
-			case Targets::BULLSEYE:
+			case Targets::BULLSEYE: // TODO: can be cleaned up?
 			{
 				Target* t = ( Target* ) targets[ i ];
-				Vector intersection = t->getNearPlane().lineIntersect( Line( m_center, m_velocity ) );
 
-				if ( ( intersection - t->getNearPlane().getPoint() ).magnitude() <= t->getRadius() )
+				// check intersection with front circle face
+				Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_center, m_velocity ) );
+
+				if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= t->getRadius() )
+				{
+					targets[ i ]->setIsHit( true );
+					break;
+				}
+
+				// check intersection with back circle face
+				Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_center, m_velocity ) );
+
+				if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= t->getRadius() )
 				{
 					targets[ i ]->setIsHit( true );
 				}
+
 				break;
 			}
 			default:

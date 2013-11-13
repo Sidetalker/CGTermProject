@@ -208,7 +208,11 @@ void GameState::keyInput( unsigned char key, int x, int y )
 				std::cout << "Target " << i << ": " << arrayTargets[i]->getCenterX() << " " << arrayTargets[i]->getCenterY() << " " << arrayTargets[i]->getCenterZ() << std::endl;
 			}
 			break;
-		case 'r': // reset projectile FOR TESTING PURPOSES ONLY
+		case 'r': // reset targets FOR TESTING PURPOSES ONLY
+			for ( uint i = 0; i < TARGET_COUNT; ++i )
+			{
+				arrayTargets[ i ]->setIsHit( false );
+			}
 			break;
         default:
             break;
@@ -299,7 +303,7 @@ void GameState::setup()
     
     // Initialize targets TODO: change to be explicit heap pointers
     arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 255, 0, 0 );
-    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, 255, 0, 0 );
+    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, Vector(1,1,0), 90, 255, 0, 0 );
     arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 255, 0, 0 );
     arrayTargets[3] = new Target();
     arrayTargets[4] = new Target();

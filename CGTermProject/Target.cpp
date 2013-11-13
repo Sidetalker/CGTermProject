@@ -23,10 +23,8 @@ Target::Target() :
 // Target constructor
 Target::Target( Vector center, float r, unsigned char colorR,
 				   unsigned char colorG, unsigned char colorB ) :
-  BaseTarget( center )
+  BaseTarget( center, Vector(1, 0, 0), 0 )
 , m_radius( r )
-, m_nearPlane() // TODO: make actual plane
-, m_farPlane()  // TODO: make actual plane
 {
     color[ 0 ] = colorR;
     color[ 1 ] = colorG;
@@ -38,22 +36,52 @@ Target::Target( Vector center, float r, unsigned char colorR,
 	m_type = Targets::BULLSEYE;
 }
 
+// Target constructor
+Target::Target( Vector center, float r, Vector rotAxis, float rotAngle, unsigned char colorR,
+				   unsigned char colorG, unsigned char colorB ) :
+  BaseTarget( center, rotAxis, rotAngle )
+, m_radius( r )
+{
+    color[ 0 ] = colorR;
+    color[ 1 ] = colorG;
+    color[ 2 ] = colorB;
+
+	Vector newOffset = Vector( 0.0, 0.0, HALF_THICKNESS ).getRotatedVector( rotAxis, rotAngle );
+
+	m_nearPlane = Plane( m_center +  newOffset, newOffset.unit() );
+	m_farPlane = Plane( m_center - newOffset, newOffset.unit() );
+
+	m_type = Targets::BULLSEYE;
+}
+
 Target::~Target()
 {
 }
 
-// Function to draw target
+// Function to draw target TODO: figure out how to draw other side while still culling
 void Target::draw()
 {
     if ( m_radius > 0.0 ) // If target exists.
     {
         glPushMatrix();
-        glTranslatef( getCenterX(), getCenterY(), getCenterZ() );
-        glColor3ubv( color );
+
+        glTranslatef( getCenterX(), getCenterY(), getCenterZ() ); // move to proper position
+        glColor3ubv( color ); // color
+
+		glRotatef( m_rotAngle, m_rotAxis.getX(), m_rotAxis.getY(), m_rotAxis.getZ() ); // rotate target as specified
+
         GLUquadricObj *p = gluNewQuadric(); // Create a quadratic for the cylinder
-        gluQuadricDrawStyle( p, GLU_FILL ); // Draw the quadratic as a wireframe
-        gluCylinder( p, m_radius, m_radius, HALF_THICKNESS * 2, 30, 2 ); // Draw the target
-        gluDisk( p, 0, m_radius, 100, 100 ); // Draw the target face
+        gluQuadricDrawStyle( p, GLU_FILL ); // Draw the quadratic as a fill
+
+		glTranslatef( 0.0, 0.0, HALF_THICKNESS ); // move whole target forward one half thickness
+
+		gluDisk( p, 0, m_radius, 100, 100 ); // Draw the target front face
+
+		glTranslatef( 0.0, 0.0, -HALF_THICKNESS * 2 ); // move whole target back one whole thickness
+
+        gluCylinder( p, m_radius, m_radius, HALF_THICKNESS * 2, 30, 2 ); // Draw the target with bottom at z = 0
+        gluDisk( p, 0, m_radius, 100, 100 ); // Draw the target back face at z = 0
+
         glPopMatrix();
         
 //        void gluCylinder(	GLUquadric*  	quad,
@@ -63,5 +91,23 @@ void Target::draw()
 //                         GLint  	slices,
 //                         GLint  	stacks);
 
+		// normals FOR TESTING PURPOSES ONLY
+		//{
+		Vector temp = (m_nearPlane.getPoint() - m_center) * 5;
+
+		Vector temp2 = (m_farPlane.getPoint() - m_center) * 5;
+
+		glColor3f( 0,1,0 );
+		glBegin( GL_LINE_STRIP );
+
+		glVertex3f( m_center.getX() + temp.getX(), m_center.getY() + temp.getY(), m_center.getZ() + temp.getZ() );
+		glVertex3f( m_center.getX(), m_center.getY(), m_center.getZ() );
+
+		glVertex3f( m_center.getX() + temp2.getX(), m_center.getY() + temp2.getY(), m_center.getZ() + temp2.getZ() );
+		glVertex3f( m_center.getX(), m_center.getY(), m_center.getZ() );
+
+		glEnd();
+		//}
+		// end of normals FOR TESTING PURPOSES ONLY
     }
 }

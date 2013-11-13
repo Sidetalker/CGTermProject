@@ -1,3 +1,9 @@
-1) make all destructors virtual
 2) fix how velocity of a projectile is set
 	velocity could be a fixed magnitude from start, but direction is set from click
+
+3) is proper plane distance being chosen? How is target being drawn?
+
+4) make target not culled
+
+5) ray target needs "straight through" test
+	cross planes inside or something
