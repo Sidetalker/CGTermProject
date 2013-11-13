@@ -43,13 +43,5 @@ void Target::draw()
         gluQuadricDrawStyle( p, GLU_FILL ); // Draw the quadratic as a wireframe
         gluCylinder( p, m_radius, m_radius, THICKNESS, 30, 2 ); // Draw the target
         gluDisk( p, 0, m_radius, 100, 100 ); // Draw the target face
-        
-//        void gluCylinder(	GLUquadric*  	quad,
-//                         GLdouble  	base,
-//                         GLdouble  	top,
-//                         GLdouble  	height,
-//                         GLint  	slices,
-//                         GLint  	stacks);
-
     }
 }

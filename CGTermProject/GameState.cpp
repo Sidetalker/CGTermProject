@@ -113,29 +113,28 @@ void GameState::update()
     }
     
     // Draw targets
-    for (int i = 0; i < TARGET_COUNT; i++)
+    for (int i = 0; i < 1; i++)
     {
-		if ( !arrayTargets[ i ]->getIsHit() )
-			arrayTargets[i]->draw();
+//		if ( !arrayTargets[ i ]->getIsHit() )
+//			arrayTargets[i]->draw();
         glPushMatrix();
-        glTranslatef( 0.0, 5.0, -0.0 );
+        glTranslatef( 0.0, 5.0, 20.0 );
         unsigned char color[ 3 ];
         color[0] = 255;
-        color[1] = 0;
-        color[2] = 0;
+        color[1] = 255;
+        color[2] = 255;
         glColor3ubv( color );
         GLUquadricObj *p = gluNewQuadric(); // Create a quadratic for the cylinder
         gluQuadricDrawStyle( p, GLU_FILL ); // Draw the quadratic as a wireframe
         gluCylinder( p, 2.0, 2.0, 0.5, 30, 2 ); // Draw the target
-        GLUquadricObj *c = gluNewQuadric();
+        
+        GLUquadric* quadsphere = gluNewQuadric();
         glEnable(GL_TEXTURE_2D);
-        
-        gluQuadricDrawStyle(c, GLU_FILL);
-        
-        gluQuadricTexture(c, GL_TRUE);
-        
-        gluDisk( p, 0, 2.0, 100, 100 ); // Draw the target face
-        
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		gluQuadricTexture(quadsphere, GL_TRUE);
+		gluDisk( quadsphere, 0, 2.0, 100, 100 ); // Draw the target face
+		gluQuadricTexture(quadsphere, GL_FALSE);
         glDisable(GL_TEXTURE_2D);
         
         
@@ -259,6 +258,10 @@ BitMapFile *getBMPData(string filename)
     // Read input file name.
     ifstream infile(filename.c_str(), ios::binary);
     
+    if(!infile) {
+        cout << "fail" << endl;
+    }
+    
     // Get the starting point of the image data.
     infile.seekg(10);
     infile.read((char *) &offset, 4);
@@ -298,7 +301,7 @@ void loadExternalTextures()
     BitMapFile *image[TEXTURE_COUNT];
     
     // Load the textures.
-    image[0] = getBMPData("Textures/RoundTargetTexture.bmp");
+    image[0] = getBMPData("/Users/sideslapd/Desktop/CGTermProject/CGTermProject/Textures/RoundTargetTexture.bmp");
     
     // Bind grass image to texture index[0].
     glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -323,10 +326,13 @@ void GameState::setup()
     // Turn on OpenGL lighting.
     glEnable(GL_LIGHTING);
     
+    // Load textures
+    loadExternalTextures();
+    
     // Light property vectors.
     float lightAmb[] = { 0.0, 0.0, 0.0, 1.0 };
     float lightDifAndSpec[] = { 1.0, 1.0, 1.0, 1.0 };
-    float lightPos[] = {10.0, 50.0, 0.0, 1.0 };
+    float lightPos[] = {10.0, 30.0, 25.0, 1.0 };
     float globAmb[] = { 0.2, 0.2, 0.2, 1.0 };
     
     // Light properties.
