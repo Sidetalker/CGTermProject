@@ -8,7 +8,7 @@ class Crosshair : public GameObject
 {
 public:
 	Crosshair();
-	~Crosshair();
+	virtual ~Crosshair();
 	virtual void draw();
 };
 

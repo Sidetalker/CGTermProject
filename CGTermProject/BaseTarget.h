@@ -9,7 +9,7 @@ class BaseTarget : public GameObject
 public:
 	BaseTarget( Vector center );
 	BaseTarget( Vector center, Vector rotAxis, float rotAngle );
-	~BaseTarget();
+	virtual ~BaseTarget();
 
 	Targets::id getType() const { return m_type; }
 	bool getIsHit() const { return m_bIsHit; }

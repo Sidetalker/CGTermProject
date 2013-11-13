@@ -7,7 +7,7 @@ class BubbleProjectile : public BaseProjectile
 {
 public:
 	BubbleProjectile( Vector center );
-	~BubbleProjectile();
+	virtual ~BubbleProjectile();
 
 	virtual void draw();
 	virtual void checkCollisions( BaseTarget* targets[], uint numTargets );

@@ -7,7 +7,7 @@ class ArrowProjectile : public BaseProjectile
 {
 public:
 	ArrowProjectile( Vector center );
-	~ArrowProjectile();
+	virtual ~ArrowProjectile();
 
 	virtual void draw();
 	virtual void checkCollisions( BaseTarget* targets[], uint numTargets );

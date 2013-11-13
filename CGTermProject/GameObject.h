@@ -9,7 +9,7 @@ class GameObject
 {
 public:
 	GameObject( Vector center );
-	~GameObject();
+	virtual ~GameObject();
 
 	virtual void draw() = 0;
 

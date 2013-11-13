@@ -11,6 +11,8 @@ public:
     Target();
     Target( Vector center, float r, unsigned char colorR,
              unsigned char colorG, unsigned char colorB );
+	virtual ~Target();
+
     float getRadius()  { return m_radius; }
     virtual void draw();
 

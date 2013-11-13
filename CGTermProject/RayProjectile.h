@@ -7,7 +7,7 @@ class RayProjectile : public BaseProjectile
 {
 public:
 	RayProjectile( Vector center );
-	~RayProjectile();
+	virtual ~RayProjectile();
 
 	virtual void draw();
 	virtual void checkCollisions( BaseTarget* targets[], uint numTargets );

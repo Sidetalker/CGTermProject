@@ -15,7 +15,7 @@ class GameState : public BaseState
 {
 public:
 	GameState();
-	~GameState();
+	virtual ~GameState();
 
 	virtual void update();
 	virtual void keyInput( unsigned char key, int x, int y );

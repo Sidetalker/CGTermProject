@@ -38,6 +38,10 @@ Target::Target( Vector center, float r, unsigned char colorR,
 	m_type = Targets::BULLSEYE;
 }
 
+Target::~Target()
+{
+}
+
 // Function to draw target
 void Target::draw()
 {

@@ -12,7 +12,7 @@ class BaseProjectile : public GameObject
 {
 public:
 	BaseProjectile( Vector center );
-	~BaseProjectile();
+	virtual ~BaseProjectile();
 
 	void setVelocity( Vector velocity ) { m_velocity = velocity; }
 
@@ -23,7 +23,6 @@ public:
 	void applyVelocity();
 
 protected:
-
 	// type of projectile
 	Projectiles::id m_type;
 

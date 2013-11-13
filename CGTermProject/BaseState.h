@@ -5,7 +5,7 @@ class BaseState
 {
 public:
 	BaseState();
-	~BaseState();
+	virtual ~BaseState();
 
 	virtual void update() = 0;
 	virtual void keyInput( unsigned char key, int x, int y ) = 0;
