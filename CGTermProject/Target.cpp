@@ -1,5 +1,4 @@
 #include "Target.h"
-#include "Textures.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -76,14 +75,7 @@ void Target::draw()
 
 		glTranslatef( 0.0, 0.0, HALF_THICKNESS ); // move whole target forward one half thickness
 
-		GLUquadric* quadDisk = gluNewQuadric(); // New quadratic for the face disk
-        glEnable(GL_TEXTURE_2D); // Enable 2D textures
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // Set texture environment parameters
-		glBindTexture(GL_TEXTURE_2D, texture[0]); // Bind the round target texture
-		gluQuadricTexture(quadDisk, GL_TRUE); // Enable textures for the quadratic
-		gluDisk(quadDisk, 0, m_radius, 100, 100 ); // Draw the target face
-		gluQuadricTexture(quadDisk, GL_FALSE); // Disable textures for the quadtratic
-        glDisable(GL_TEXTURE_2D); // Disable 2D textures
+		gluDisk( p, 0, m_radius, 100, 100 ); // Draw the target front face
 
 		glTranslatef( 0.0, 0.0, -HALF_THICKNESS * 2 ); // move whole target back one whole thickness
 
@@ -92,7 +84,15 @@ void Target::draw()
 
         glPopMatrix();
         
+//        void gluCylinder(	GLUquadric*  	quad,
+//                         GLdouble  	base,
+//                         GLdouble  	top,
+//                         GLdouble  	height,
+//                         GLint  	slices,
+//                         GLint  	stacks);
+
 		// normals FOR TESTING PURPOSES ONLY
+		//{
 		Vector temp = (m_nearPlane.getPoint() - m_center) * 5;
 
 		Vector temp2 = (m_farPlane.getPoint() - m_center) * 5;

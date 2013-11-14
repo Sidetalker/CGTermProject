@@ -1,3 +1,6 @@
+#ifndef H_TARGET
+#define H_TARGET
+
 #include "BaseTarget.h"
 #include "Plane.h"
 
@@ -26,3 +29,5 @@ private:
 
     unsigned char color[ 3 ];
 };
+
+#endif

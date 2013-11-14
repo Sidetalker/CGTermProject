@@ -1,6 +1,5 @@
 #include <cmath>
 #include <iostream>
-#include <fstream>
 
 #include "GameState.h"
 #include "Globals.h"
@@ -8,7 +7,6 @@
 #include "Crosshair.h"
 #include "BubbleProjectile.h"
 #include "RayProjectile.h"
-#include "Textures.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -18,11 +16,6 @@
 
 // outermost scene rotation FOR TESTING PURPOSES ONLY
 float Yangle = 0;
-
-// global step counter just FOR TESTING PURPOSES ONLY
-float projectileStep = 0.0;
-
-using namespace std;
 
 GameState::GameState() :
   m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
@@ -113,7 +106,7 @@ void GameState::update()
 
 
     // Draw targets
-    for (int i = 0; i < m_numTargets; i++)
+    for (int i = 0; i < TARGET_COUNT; i++)
     {
 		if ( !arrayTargets[ i ]->getIsHit() )
 			arrayTargets[i]->draw();
@@ -273,13 +266,10 @@ void GameState::setup()
     // Turn on OpenGL lighting.
     glEnable(GL_LIGHTING);
     
-    // Load textures
-    Textures::loadTextures();
-    
     // Light property vectors.
     float lightAmb[] = { 0.0, 0.0, 0.0, 1.0 };
     float lightDifAndSpec[] = { 1.0, 1.0, 1.0, 1.0 };
-    float lightPos[] = {10.0, 30.0, 25.0, 1.0 };
+    float lightPos[] = {10.0, 50.0, 0.0, 1.0 };
     float globAmb[] = { 0.2, 0.2, 0.2, 1.0 };
     
     // Light properties.
@@ -312,9 +302,9 @@ void GameState::setup()
     // End lighting stuff
     
     // Initialize targets TODO: change to be explicit heap pointers
-    arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 255, 255, 255 );
-    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, Vector(1,1,0), 90, 255, 255, 255 );
-    arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 255, 255, 255 );
+    arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 255, 0, 0 );
+    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, Vector(1,1,0), 90, 255, 0, 0 );
+    arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 255, 0, 0 );
     arrayTargets[3] = new Target();
     arrayTargets[4] = new Target();
 }
