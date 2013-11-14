@@ -12,7 +12,7 @@ const static uint SLICES_AND_STACKS = 10;
 BubbleProjectile::BubbleProjectile( Vector center ) :
   BaseProjectile( center )
 {
-	m_type = Projectiles::BUBBLE;
+	m_type = ProjectileTypes::BUBBLE;
 }
 
 

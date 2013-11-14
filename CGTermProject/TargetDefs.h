@@ -2,7 +2,7 @@
 #define TARGET_DEFS_H
 
 // contains the target types
-struct Targets
+struct TargetTypes
 {
 	enum id
 	{

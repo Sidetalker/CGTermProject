@@ -2,6 +2,7 @@
 
 #include "Globals.h"
 #include "Textures.h"
+#include "TextureDefs.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -20,7 +21,7 @@ Target::Target() :
     color[ 1 ] = 0;
     color[ 2 ] = 0;
 
-	m_type = Targets::BULLSEYE;
+	m_type = TargetTypes::BULLSEYE;
 }
 
 // Target constructor
@@ -36,7 +37,7 @@ Target::Target( Vector center, float r, unsigned char colorR,
 	m_nearPlane = Plane( m_center +  Vector( 0.0, 0.0, HALF_THICKNESS ), Vector( 0.0, 0.0, 1.0 ) );
 	m_farPlane = Plane( m_center - Vector( 0.0, 0.0, HALF_THICKNESS ), Vector( 0.0, 0.0, -1.0 ) );
 
-	m_type = Targets::BULLSEYE;
+	m_type = TargetTypes::BULLSEYE;
 }
 
 // Target constructor
@@ -54,7 +55,7 @@ Target::Target( Vector center, float r, Vector rotAxis, float rotAngle, unsigned
 	m_nearPlane = Plane( m_center +  newOffset, newOffset.unit() );
 	m_farPlane = Plane( m_center - newOffset, newOffset.unit() );
 
-	m_type = Targets::BULLSEYE;
+	m_type = TargetTypes::BULLSEYE;
 }
 
 Target::~Target()
@@ -81,7 +82,7 @@ void Target::draw()
 		GLUquadric* quadDisk = gluNewQuadric(); // New quadratic for the face disk
         glEnable(GL_TEXTURE_2D); // Enable 2D textures
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // Set texture environment parameters
-		glBindTexture(GL_TEXTURE_2D, textures->getTextureIndices()[0]); // Bind the round target texture
+		glBindTexture(GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::BULLSEYE ] ); // Bind the round target texture
 		gluQuadricTexture(quadDisk, GL_TRUE); // Enable textures for the quadratic
 		gluDisk(quadDisk, 0, m_radius, 100, 100 ); // Draw the target face
 		gluQuadricTexture(quadDisk, GL_FALSE); // Disable textures for the quadtratic

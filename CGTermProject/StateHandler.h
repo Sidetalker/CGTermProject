@@ -11,8 +11,8 @@ public:
 	StateHandler();
 	~StateHandler();
 
-	void changeState( States::id ); // TODO: implement state function
-	States::id getStateId();        // TODO: implement state getter
+	void changeState( StateTypes::id ); // TODO: implement state function
+	StateTypes::id getStateId();        // TODO: implement state getter
 
 private:
 	static BaseState* m_pCurState;

@@ -11,12 +11,12 @@ public:
 	BaseTarget( Vector center, Vector rotAxis, float rotAngle );
 	virtual ~BaseTarget();
 
-	Targets::id getType() const { return m_type; }
+	TargetTypes::id getType() const { return m_type; }
 	bool getIsHit() const { return m_bIsHit; }
 	void setIsHit( const bool isHit ) { m_bIsHit = isHit; }
 
 protected:
-	Targets::id m_type;
+	TargetTypes::id m_type;
 
 	float m_rotAngle;
 	Vector m_rotAxis;

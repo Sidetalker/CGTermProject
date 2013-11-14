@@ -2,7 +2,7 @@
 #define PROJECTILE_DEFS_H
 
 // contains the projectile types
-struct Projectiles
+struct ProjectileTypes
 {
 	enum id
 	{

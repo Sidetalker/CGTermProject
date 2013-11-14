@@ -9,7 +9,7 @@
 RayProjectile::RayProjectile( Vector center ) :
   BaseProjectile( center )
 {
-	m_type = Projectiles::RAY;
+	m_type = ProjectileTypes::RAY;
 }
 
 
@@ -30,7 +30,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 	{
 		switch ( targets[ i ]->getType() )
 		{
-			case Targets::BULLSEYE: // TODO: can be cleaned up?
+			case TargetTypes::BULLSEYE: // TODO: can be cleaned up?
 			{
 				Target* t = ( Target* ) targets[ i ];
 

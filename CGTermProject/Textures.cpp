@@ -7,6 +7,7 @@
 //
 
 #include "Textures.h"
+#include "TextureDefs.h"
 
 #include <iostream>
 #include <fstream>
@@ -21,18 +22,24 @@ using namespace std;
 
 Textures::Textures()
 {
-	m_textureIndices = new unsigned int[ TEXTURE_COUNT ];
+	m_textureIndices = new unsigned int[ TextureTypes::NUM_TEXTURES ];
+	// generates names array
+	glGenTextures( TextureTypes::NUM_TEXTURES, m_textureIndices );
 	loadTextures();
 }
 
 Textures::~Textures()
 {
+	// clear names array
+	glDeleteTextures( TextureTypes::NUM_TEXTURES, m_textureIndices );
+
 	// free array
 	delete[] m_textureIndices;
 }
 
 Textures::BitMapFile* Textures::getBMPData( std::string filename )
 {
+	// ***MUST CLEAN UP AFTER THIS ALLOC (Handled at end of loadTextures loop.)***
 	BitMapFile *bmp = new BitMapFile;
 	unsigned int size, offset, headerSize;
     
@@ -41,7 +48,7 @@ Textures::BitMapFile* Textures::getBMPData( std::string filename )
 
 	if( !infile )
 	{
-		cout << "texture load fail" << endl;
+		cout << "couldn't find texture file " << filename << endl;
 	}
     
 	// Get the starting point of the image data.
@@ -58,7 +65,9 @@ Textures::BitMapFile* Textures::getBMPData( std::string filename )
     
 	// Allocate buffer for the image.
 	size = bmp->sizeX * bmp->sizeY * 24;
-	bmp->m_data = new unsigned char[size];
+
+	// ***CLEANED UP IN DESTRUCTOR OF BitMapFile***
+	bmp->m_data = new unsigned char[ size ];
     
 	// Read bitmap data.
 	infile.seekg(offset);
@@ -78,18 +87,37 @@ Textures::BitMapFile* Textures::getBMPData( std::string filename )
 
 void Textures::loadTextures()
 {
-    // Local storage for bmp image data.
-    BitMapFile *image[TEXTURE_COUNT];
-    
-    // Load the textures.
-    image[0] = getBMPData("Textures/RoundTargetTexture.bmp"); 
-    
-    // Bind target image to texture index[0].
-    glBindTexture(GL_TEXTURE_2D, m_textureIndices[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image[0]->sizeX, image[0]->sizeY, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, image[0]->m_data);
+	// index number for texture
+	unsigned int textureIndex = 0;
+	string textureFilename;
+
+	ifstream textureFilenames( "Textures/TextureFilenames.txt" );
+	{
+		if ( !textureFilenames )
+		{
+			cout << "couldn't find file \"TextureFilenames.txt\"" << endl;
+		}
+	}
+
+	while ( textureIndex < TextureTypes::NUM_TEXTURES )
+	{
+		textureFilenames >> textureFilename;
+
+		// Load the textures.
+		BitMapFile* image = getBMPData( "Textures/" + textureFilename );
+
+		// Bind target image to texture image.
+		glBindTexture(GL_TEXTURE_2D, m_textureIndices[ textureIndex ]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->sizeX, image->sizeY, 0,
+		             GL_RGB, GL_UNSIGNED_BYTE, image->m_data);
+
+		// ***HANDLE UNHANDLED CLEANUP***
+		delete image;
+
+		++textureIndex;
+	}
 }

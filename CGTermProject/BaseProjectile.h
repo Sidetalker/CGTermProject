@@ -24,7 +24,7 @@ public:
 
 protected:
 	// type of projectile
-	Projectiles::id m_type;
+	ProjectileTypes::id m_type;
 
 	Vector m_velocity;
 };

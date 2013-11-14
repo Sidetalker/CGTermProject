@@ -4,7 +4,7 @@
 ArrowProjectile::ArrowProjectile( Vector center ) :
   BaseProjectile( center )
 {
-	m_type = Projectiles::ARROW;
+	m_type = ProjectileTypes::ARROW;
 }
 
 

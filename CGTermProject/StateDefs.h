@@ -2,7 +2,7 @@
 #define STATES_DEFS_H
 
 // contains the game states
-struct States
+struct StateTypes
 {
 	enum id
 	{

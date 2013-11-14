@@ -13,8 +13,6 @@
 
 #endif /* defined(__CGTermProject__Textures__) */
 
-#define TEXTURE_COUNT 1
-
 class Textures
 {
 public:
