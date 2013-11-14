@@ -13,11 +13,6 @@
 #  include <GL/glut.h>
 #endif
 
-void setup()
-{
-
-}
-
 // Main routine.
 int main(int argc, char **argv)
 {
@@ -29,7 +24,6 @@ int main(int argc, char **argv)
 	//	test.vectorIntersect( testLine ).getY() << " " <<
 	//	test.vectorIntersect( testLine ).getZ() << '\n';
 	// TESTING
-
 
 	// create global game object
     glutInit(&argc, argv);
