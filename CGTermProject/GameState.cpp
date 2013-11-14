@@ -6,18 +6,13 @@
 #include "Globals.h"
 #include "Vector.h"
 #include "Crosshair.h"
+#include "Textures.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
 #else
 #  include <GL/glut.h>
 #endif
-
-// Texture count
-#define TEXTURE_COUNT 1
-
-// Texture indices
-static unsigned int texture[TEXTURE_COUNT]; // Array of texture indices.
 
 // outermost scene rotation FOR TESTING PURPOSES ONLY
 float Yangle = 0;
@@ -113,33 +108,10 @@ void GameState::update()
     }
     
     // Draw targets
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < m_numTargets; i++)
     {
-//		if ( !arrayTargets[ i ]->getIsHit() )
-//			arrayTargets[i]->draw();
-        glPushMatrix();
-        glTranslatef( 0.0, 5.0, 20.0 );
-        unsigned char color[ 3 ];
-        color[0] = 255;
-        color[1] = 255;
-        color[2] = 255;
-        glColor3ubv( color );
-        GLUquadricObj *p = gluNewQuadric(); // Create a quadratic for the cylinder
-        gluQuadricDrawStyle( p, GLU_FILL ); // Draw the quadratic as a wireframe
-        gluCylinder( p, 2.0, 2.0, 0.5, 30, 2 ); // Draw the target
-        
-        GLUquadric* quadsphere = gluNewQuadric();
-        glEnable(GL_TEXTURE_2D);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glBindTexture(GL_TEXTURE_2D, texture[0]);
-		gluQuadricTexture(quadsphere, GL_TRUE);
-		gluDisk( quadsphere, 0, 2.0, 100, 100 ); // Draw the target face
-		gluQuadricTexture(quadsphere, GL_FALSE);
-        glDisable(GL_TEXTURE_2D);
-        
-        
-        
-        glPopMatrix();
+		if ( !arrayTargets[ i ]->getIsHit() )
+			arrayTargets[i]->draw();
     }
     
 	// Draw crosshair
@@ -241,78 +213,6 @@ void GameState::keyInput( unsigned char key, int x, int y )
     }
 }
 
-// Struct of bitmap file.
-struct BitMapFile
-{
-    int sizeX;
-    int sizeY;
-    unsigned char *data;
-};
-
-// Routine to read a bitmap file.
-BitMapFile *getBMPData(string filename)
-{
-    BitMapFile *bmp = new BitMapFile;
-    unsigned int size, offset, headerSize;
-    
-    // Read input file name.
-    ifstream infile(filename.c_str(), ios::binary);
-    
-    if(!infile) {
-        cout << "fail" << endl;
-    }
-    
-    // Get the starting point of the image data.
-    infile.seekg(10);
-    infile.read((char *) &offset, 4);
-    
-    // Get the header size of the bitmap.
-    infile.read((char *) &headerSize,4);
-    
-    // Get width and height values in the bitmap header.
-    infile.seekg(18);
-    infile.read( (char *) &bmp->sizeX, 4);
-    infile.read( (char *) &bmp->sizeY, 4);
-    
-    // Allocate buffer for the image.
-    size = bmp->sizeX * bmp->sizeY * 24;
-    bmp->data = new unsigned char[size];
-    
-    // Read bitmap data.
-    infile.seekg(offset);
-    infile.read((char *) bmp->data , size);
-    
-    // Reverse color from bgr to rgb.
-    int temp;
-    for (int i = 0; i < size; i += 3)
-    {
-        temp = bmp->data[i];
-        bmp->data[i] = bmp->data[i+2];
-        bmp->data[i+2] = temp;
-    }
-    
-    return bmp;
-}
-
-// Load external textures.
-void loadExternalTextures()
-{
-    // Local storage for bmp image data.
-    BitMapFile *image[TEXTURE_COUNT];
-    
-    // Load the textures.
-    image[0] = getBMPData("/Users/sideslapd/Desktop/CGTermProject/CGTermProject/Textures/RoundTargetTexture.bmp"); // Must be set manually
-    
-    // Bind target image to texture index[0].
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image[0]->sizeX, image[0]->sizeY, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, image[0]->data);
-}
-
 // Initialization routine.
 void GameState::setup()
 {
@@ -327,7 +227,7 @@ void GameState::setup()
     glEnable(GL_LIGHTING);
     
     // Load textures
-    loadExternalTextures();
+    Textures::loadTextures();
     
     // Light property vectors.
     float lightAmb[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -365,9 +265,9 @@ void GameState::setup()
     // End lighting stuff
     
     // Initialize targets TODO: change to be explicit heap pointers
-    arrayTargets[0] = new Target( 0.0, 5.0, 0.0, 2.0, 255, 0, 0 );
-    arrayTargets[1] = new Target( 10.0, 5.0, -15.0, 2.0, 255, 0, 0 );
-    arrayTargets[2] = new Target( -10.0, 5.0, -10.0, 2.0, 255, 0, 0 );
+    arrayTargets[0] = new Target( 0.0, 5.0, 0.0, 2.0, 255, 255, 255 );
+    arrayTargets[1] = new Target( 10.0, 5.0, -15.0, 2.0, 255, 255, 255 );
+    arrayTargets[2] = new Target( -10.0, 5.0, -10.0, 2.0, 255, 255, 255 );
     arrayTargets[3] = new Target();
     arrayTargets[4] = new Target();
 }
