@@ -9,25 +9,40 @@
 #ifndef __CGTermProject__Textures__
 #define __CGTermProject__Textures__
 
-#include <iostream>
-#include <fstream>
-
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+#include <string>
 
 #endif /* defined(__CGTermProject__Textures__) */
 
 #define TEXTURE_COUNT 1
 
-// Array of texture indices
-static unsigned int texture[TEXTURE_COUNT];
-
 class Textures
 {
 public:
-    // Static function to load textures
-    static void loadTextures();
+	Textures();
+	~Textures();
+
+	unsigned int* getTextureIndices() { return m_textureIndices; }
+
+private:
+
+	// Struct of bitmap file.
+	class BitMapFile
+	{
+	public:
+		BitMapFile() {};
+		~BitMapFile() { delete[] m_data; } ;
+
+		int sizeX;
+		int sizeY;
+
+		// Array of data
+		unsigned char* m_data;
+	};
+
+	// Array of texture indices
+	unsigned int* m_textureIndices;
+
+	void loadTextures();
+
+	BitMapFile* getBMPData( std::string filename );
 };

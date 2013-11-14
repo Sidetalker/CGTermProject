@@ -1,4 +1,6 @@
 #include "Target.h"
+
+#include "Globals.h"
 #include "Textures.h"
 
 #ifdef __APPLE__
@@ -79,7 +81,7 @@ void Target::draw()
 		GLUquadric* quadDisk = gluNewQuadric(); // New quadratic for the face disk
         glEnable(GL_TEXTURE_2D); // Enable 2D textures
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // Set texture environment parameters
-		glBindTexture(GL_TEXTURE_2D, texture[0]); // Bind the round target texture
+		glBindTexture(GL_TEXTURE_2D, textures->getTextureIndices()[0]); // Bind the round target texture
 		gluQuadricTexture(quadDisk, GL_TRUE); // Enable textures for the quadratic
 		gluDisk(quadDisk, 0, m_radius, 100, 100 ); // Draw the target face
 		gluQuadricTexture(quadDisk, GL_FALSE); // Disable textures for the quadtratic

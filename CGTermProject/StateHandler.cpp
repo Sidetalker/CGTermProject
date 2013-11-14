@@ -1,6 +1,7 @@
 #include "StateHandler.h"
 
 #include "Globals.h"
+#include "Game.h"
 #include "GameState.h"
 
 #ifdef __APPLE__

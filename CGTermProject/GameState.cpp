@@ -4,11 +4,11 @@
 
 #include "GameState.h"
 #include "Globals.h"
+#include "Game.h"
 #include "Vector.h"
 #include "Crosshair.h"
 #include "BubbleProjectile.h"
 #include "RayProjectile.h"
-#include "Textures.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -272,9 +272,6 @@ void GameState::setup()
     
     // Turn on OpenGL lighting.
     glEnable(GL_LIGHTING);
-    
-    // Load textures
-    Textures::loadTextures();
     
     // Light property vectors.
     float lightAmb[] = { 0.0, 0.0, 0.0, 1.0 };

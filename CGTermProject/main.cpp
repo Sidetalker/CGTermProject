@@ -2,6 +2,8 @@
 #include <cmath>
 
 #include "Globals.h"
+#include "Game.h"
+#include "Textures.h"
 
 #include "Plane.h"
 
@@ -33,6 +35,7 @@ int main(int argc, char **argv)
     glutCreateWindow ("Empty Scene");
 
 	game = new Game();
+	textures = new Textures();
 
     glutMainLoop();
 
