@@ -15,6 +15,8 @@
 #  include <GL/glut.h>
 #endif
 
+using namespace std;
+
 // Main routine.
 int main(int argc, char **argv)
 {
