@@ -1,3 +1,16 @@
+CREATE BUBBLE TEST
+	is similar to ray test
+
+	HOW TO:
+		create member in BaseProjectile for "previous position"
+		write checkCollisions
+			compare dot products of previous and current position
+				checks if crosses the plane
+					if so, check if point of intersection is closer than sum of target and bubble radii
+					also check perpendicular distance to plane
+
+
+
 2) fix how velocity of a projectile is set
 	velocity could be a fixed magnitude from start, but direction is set from click
 

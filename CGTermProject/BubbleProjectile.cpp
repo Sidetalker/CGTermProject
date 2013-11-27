@@ -1,5 +1,11 @@
 #include "BubbleProjectile.h"
 
+#include <cmath>
+
+#include "Target.h"
+#include "Plane.h"
+
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -38,9 +44,59 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 	// TODO: this is a naiive check, improve on it
 	for ( uint i = 0; i < numTargets; ++i )
 	{
-		if ( ( m_center - Vector( targets[ i ]->getCenterX(), targets[ i ]->getCenterY(), targets[ i ]->getCenterZ() ) ).magnitude() < 1 )
+		switch ( targets[ i ]->getType() )
 		{
-			targets[ i ]->setIsHit( true );
+			case TargetTypes::BULLSEYE: // TODO: can be cleaned up?
+			{
+				// cast as Target
+				Target* t = ( Target* ) targets[ i ];
+
+				// Vector from near plane to current center
+				Vector nearPlaneToCurCenter( ( m_center ) - ( t->getNearPlane().getPoint() ) );
+
+				// Vector from near plane to previous center
+				Vector nearPlaneToPrevCenter( ( m_prevPosition ) - ( t->getNearPlane().getPoint() ) );
+
+				// if opposite signs (crossed the near plane) 
+				if ( ( nearPlaneToPrevCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 != nearPlaneToCurCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 ) )
+				{
+					// point on near plane of intersection
+					Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_prevPosition, m_velocity ) ); // TODO: use previous velocity?
+
+					// if point of intersection is within bounds of circle target face
+					if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= ( t->getRadius() + RADIUS ) )
+					{
+						t->setIsHit( true );
+						break;
+					}
+				}
+
+				// Vector from far plane to current center
+				Vector farPlaneToCurCenter( ( m_center ) - ( t->getFarPlane().getPoint() ) );
+
+				// Vector from far plane to previous center
+				Vector farPlaneToPrevCenter( ( m_prevPosition ) - ( t->getFarPlane().getPoint() ) );
+
+				// if opposite signs (crossed the far plane) 
+				if ( ( farPlaneToPrevCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 != farPlaneToCurCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 ) )
+				{
+					// point on far plane of intersection
+					Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_prevPosition, m_velocity ) ); // TODO: use previous velocity?
+
+					// if point of intersection is within bounds of circle target face
+					if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= ( t->getRadius() + RADIUS ) )
+					{
+						t->setIsHit( true );
+					}
+				}
+
+				break;
+			}
+			default:
+			{
+				// invalid target type
+				break;
+			}
 		}
 	}
 }

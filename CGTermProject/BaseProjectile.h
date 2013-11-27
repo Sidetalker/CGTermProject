@@ -27,6 +27,8 @@ protected:
 	ProjectileTypes::id m_type;
 
 	Vector m_velocity;
+
+	Vector m_prevPosition;
 };
 
 #endif

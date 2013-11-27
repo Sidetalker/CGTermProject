@@ -153,7 +153,7 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 		clickY = -( y - ( ( eyeY / ( frustumHalfHeight ) ) * ( windowHalfHeight ) + ( windowHalfHeight ) ) ) / ( windowHeight / frustumHeight );
 		clickZ = eyeZ - frustumNear;
 
-		BaseProjectile* p = new RayProjectile( eyePos );
+		BaseProjectile* p = new BubbleProjectile( eyePos );
 		p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ).unit() ); // TODO: Task #2
 		m_activeProjectiles.push_back( p );
 	}
