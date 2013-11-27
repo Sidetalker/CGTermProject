@@ -6,6 +6,7 @@ struct StateTypes
 {
 	enum id
 	{
+		TITLESTATE,
 		GAMESTATE,
 		
 		NUM_STATES

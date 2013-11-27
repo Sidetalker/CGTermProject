@@ -11,7 +11,7 @@ public:
 	StateHandler();
 	~StateHandler();
 
-	void changeState( StateTypes::id ); // TODO: implement state function
+	void changeState( StateTypes::id newState ); // TODO: implement state function
 	StateTypes::id getStateId();        // TODO: implement state getter
 
 private:

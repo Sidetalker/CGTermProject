@@ -27,7 +27,7 @@ using namespace std;
 GameState::GameState() :
   m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
 , m_score( 0 )
-,  clickX( 0 )
+, clickX( 0 )
 , clickY( 0 )
 , clickZ( 0 )
 , m_pCrosshair( new Crosshair() )
@@ -267,6 +267,9 @@ void GameState::setup()
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
     
+	// load identity to initialize matrix (prevent unexpected lighting)
+	glLoadIdentity();
+
     // Lighting stuff from checkeredFloor.cpp
     glEnable(GL_DEPTH_TEST); // Enable depth testing.
     

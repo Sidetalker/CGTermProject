@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Game.h"
 #include "GameState.h"
+#include "TitleState.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -17,7 +18,7 @@ StateHandler::StateHandler()
 {
 	// TODO: currently a default game state, maybe have an intro state
 	// TODO: currently a hardcoded current state, change earlier
-	m_pCurState = new GameState();
+	m_pCurState = new TitleState();
 
 	glutKeyboardFunc( keyInput );
 	glutDisplayFunc( update );
@@ -32,6 +33,29 @@ StateHandler::StateHandler()
 StateHandler::~StateHandler()
 {
 	delete m_pCurState;
+}
+
+void StateHandler::changeState( StateTypes::id newState )
+{
+	delete m_pCurState;
+	switch( newState )
+	{
+		case StateTypes::TITLESTATE:
+		{
+			m_pCurState = new TitleState();
+			break;
+		}
+		case StateTypes::GAMESTATE:
+		{
+			m_pCurState = new GameState();
+			break;
+		}
+		default:
+		{
+			// invalid state
+			break;
+		}
+	}
 }
 
 void StateHandler::animate( int value )

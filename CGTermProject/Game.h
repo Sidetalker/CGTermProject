@@ -11,6 +11,7 @@ public:
 	~Game();
 
 	Camera* getCamera() const { return m_pCamera; }
+	StateHandler* getStateHandler() const { return m_pStateHandler; }
 
 private:
 	Camera* m_pCamera;
