@@ -11,6 +11,7 @@
 #endif
 
 static const float HALF_THICKNESS = 0.5;
+static const uint POINT_VALUE = 10;
 
 // Target default constructor
 Target::Target() :
@@ -27,7 +28,7 @@ Target::Target() :
 // Target constructor
 Target::Target( Vector center, float r, unsigned char colorR,
 				   unsigned char colorG, unsigned char colorB ) :
-  BaseTarget( center, Vector(1, 0, 0), 0 )
+  BaseTarget( center, Vector(1, 0, 0), 0, POINT_VALUE )
 , m_radius( r )
 {
     color[ 0 ] = colorR;
@@ -43,7 +44,7 @@ Target::Target( Vector center, float r, unsigned char colorR,
 // Target constructor
 Target::Target( Vector center, float r, Vector rotAxis, float rotAngle, unsigned char colorR,
 				   unsigned char colorG, unsigned char colorB ) :
-  BaseTarget( center, rotAxis, rotAngle )
+  BaseTarget( center, rotAxis, rotAngle, POINT_VALUE )
 , m_radius( r )
 {
     color[ 0 ] = colorR;
@@ -91,6 +92,9 @@ void Target::draw()
 		glTranslatef( 0.0, 0.0, -HALF_THICKNESS * 2 ); // move whole target back one whole thickness
 
         gluCylinder( p, m_radius, m_radius, HALF_THICKNESS * 2, 30, 2 ); // Draw the target with bottom at z = 0
+
+		// reverse orientation for back face
+		gluQuadricOrientation(p,  GLU_INSIDE);
         gluDisk( p, 0, m_radius, 100, 100 ); // Draw the target back face at z = 0
 
         glPopMatrix();
