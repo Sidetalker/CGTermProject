@@ -61,7 +61,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 				if ( ( nearPlaneToPrevCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 != nearPlaneToCurCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 ) )
 				{
 					// point on near plane of intersection
-					Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_prevPosition, m_velocity ) ); // TODO: use previous velocity?
+					Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
 
 					// if point of intersection is within bounds of circle target face
 					if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= ( t->getRadius() + RADIUS ) )
@@ -81,7 +81,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 				if ( ( farPlaneToPrevCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 != farPlaneToCurCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 ) )
 				{
 					// point on far plane of intersection
-					Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_prevPosition, m_velocity ) ); // TODO: use previous velocity?
+					Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
 
 					// if point of intersection is within bounds of circle target face
 					if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= ( t->getRadius() + RADIUS ) )

@@ -7,6 +7,7 @@ struct ProjectileTypes
 	enum id
 	{
 		BUBBLE,
+		SPREAD,
 		ARROW,
 		RAY,
 		
