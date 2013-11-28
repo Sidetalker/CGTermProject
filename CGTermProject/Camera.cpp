@@ -58,7 +58,7 @@ void Camera::switchToOrtho()
 
 // referenced http://iphonedevelopment.blogspot.com/2010/02/drawing-hud-display-in-opengl-es.html
 // returns from orthographic projection to standard perspective projection
-void Camera::returnToFrustum()
+void Camera::returnToPerspective()
 {
 	glEnable( GL_DEPTH_TEST );
 	glMatrixMode( GL_PROJECTION );

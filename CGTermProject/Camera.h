@@ -40,7 +40,7 @@ public:
 	void setWindowHeight( float windowHeight ) { m_windowHeight = windowHeight; m_windowHalfHeight = windowHeight / 2; };
 
 	void switchToOrtho();
-	void returnToFrustum();
+	void returnToPerspective();
 
 private:
 	// camera location

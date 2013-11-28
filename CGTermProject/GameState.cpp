@@ -361,7 +361,7 @@ void GameState::drawHUD()
 	}
     
 	// return to Perspective projection (with old PM)
-	game->getCamera()->returnToFrustum();
+	game->getCamera()->returnToPerspective();
 	
 	// pop to MVM
 	glPopMatrix();
