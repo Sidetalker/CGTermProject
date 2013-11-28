@@ -85,13 +85,13 @@ void Target::draw()
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // Set texture environment parameters
 		glBindTexture(GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::BULLSEYE ] ); // Bind the round target texture
 		gluQuadricTexture(quadDisk, GL_TRUE); // Enable textures for the quadratic
-		gluDisk(quadDisk, 0, m_radius, 100, 100 ); // Draw the target face
+		gluDisk(quadDisk, 0, m_radius, 15, 15 ); // Draw the target face
 		gluQuadricTexture(quadDisk, GL_FALSE); // Disable textures for the quadtratic
         glDisable(GL_TEXTURE_2D); // Disable 2D textures
 
 		glTranslatef( 0.0, 0.0, -HALF_THICKNESS * 2 ); // move whole target back one whole thickness
 
-        gluCylinder( p, m_radius, m_radius, HALF_THICKNESS * 2, 30, 2 ); // Draw the target with bottom at z = 0
+        gluCylinder( p, m_radius, m_radius, HALF_THICKNESS * 2, 15, 2 ); // Draw the target with bottom at z = 0
 
 		// reverse orientation for back face
 		gluQuadricOrientation(p,  GLU_INSIDE);
@@ -99,6 +99,7 @@ void Target::draw()
 
         glPopMatrix();
         
+		/*
 		// normals FOR TESTING PURPOSES ONLY
 		Vector temp = (m_nearPlane.getPoint() - m_center) * 5;
 
@@ -116,5 +117,6 @@ void Target::draw()
 		glEnd();
 		//}
 		// end of normals FOR TESTING PURPOSES ONLY
+		*/
     }
 }
