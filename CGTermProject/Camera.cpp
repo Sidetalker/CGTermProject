@@ -1,5 +1,11 @@
 #include "Camera.h"
 
+#ifdef __APPLE__
+#  include <GLUT/glut.h>
+#else
+#  include <GL/glut.h>
+#endif
+
 Camera::Camera(
 	float posX, 
 	float posY, 
@@ -32,4 +38,30 @@ Camera::Camera(
 
 Camera::~Camera()
 {
+}
+
+// referenced http://iphonedevelopment.blogspot.com/2010/02/drawing-hud-display-in-opengl-es.html
+// changes to orthographic projection (for HUD elements)
+void Camera::switchToOrtho()
+{
+	glDisable( GL_DEPTH_TEST );
+	glMatrixMode( GL_PROJECTION );
+	glPushMatrix();
+	glLoadIdentity();
+
+	// change to actual window coordinate projection
+	glOrtho( 0, m_windowWidth, 0, m_windowHeight, 0, 1 );  
+
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
+}
+
+// referenced http://iphonedevelopment.blogspot.com/2010/02/drawing-hud-display-in-opengl-es.html
+// returns from orthographic projection to standard perspective projection
+void Camera::returnToFrustum()
+{
+	glEnable( GL_DEPTH_TEST );
+	glMatrixMode( GL_PROJECTION );
+	glPopMatrix();
+	glMatrixMode( GL_MODELVIEW );
 }

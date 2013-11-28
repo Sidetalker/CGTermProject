@@ -43,6 +43,7 @@ private:
 	void drawActiveProjectiles();
 	
 	void setup();
+	void drawHUD();
 
 	// TODO: remove later...
 	void testDrawShot();

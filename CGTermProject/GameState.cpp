@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <stdio.h>
 
 #include "GameState.h"
 #include "Globals.h"
@@ -110,6 +111,7 @@ void GameState::update()
     
 	updateActiveProjectiles();
 	drawActiveProjectiles();
+	drawHUD();
 
 
     // Draw targets
@@ -319,7 +321,53 @@ void GameState::setup()
     arrayTargets[4] = new Target();
 }
 
+void GameState::drawHUD()
+{
+	// push current MVM
+	glPushMatrix();
+	// disable lighting
+	glDisable( GL_LIGHTING );
 
+	// switch to Ortho projection (with new MVM)
+	game->getCamera()->switchToOrtho();
+
+	// arrays to store score c-style strings (allocating 25 chars should be enough)
+	char scoreString[25];
+	char highScoreString[25];
+
+	// create c-style strings
+	sprintf(scoreString,"SCORE: %d", m_score);
+	sprintf(highScoreString,"HIGH SCORE: %d", 999999);
+		
+	// color of text
+	glColor3f( 0.0, 0.0, 0.0 );
+
+	// set raster to top left corner (15 is for font height)
+	glRasterPos2f( 0, game->getCamera()->getWindowHeight() - 15 );
+
+	// render text
+	for ( char* c = scoreString; *c != '\0'; c++ )
+	{
+		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
+	}
+	
+	// set raster to top left corner (15 is for font height)
+	glRasterPos2f( 0, game->getCamera()->getWindowHeight() - 30 );
+	
+	// render text
+	for ( char* c = highScoreString; *c != '\0'; c++ )
+	{
+		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
+	}
+    
+	// return to Perspective projection (with old PM)
+	game->getCamera()->returnToFrustum();
+	
+	// pop to MVM
+	glPopMatrix();
+	// re-enable lighting
+	glEnable( GL_LIGHTING );
+}
 
 
 

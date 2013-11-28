@@ -39,6 +39,9 @@ public:
 	void setWindowWidth( float windowWidth ) { m_windowWidth = windowWidth; m_windowHalfWidth = windowWidth / 2; }
 	void setWindowHeight( float windowHeight ) { m_windowHeight = windowHeight; m_windowHalfHeight = windowHeight / 2; };
 
+	void switchToOrtho();
+	void returnToFrustum();
+
 private:
 	// camera location
 	float m_posX;
