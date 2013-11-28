@@ -11,10 +11,10 @@
 class BaseProjectile : public GameObject
 {
 public:
-	BaseProjectile( Vector center );
+	BaseProjectile( Vector center, float speed );
 	virtual ~BaseProjectile();
 
-	void setVelocity( Vector velocity ) { m_velocity = velocity; }
+	void setVelocity( Vector velocity );
 
 	// TODO:
 	// Purpose: flags all hit targets as hit
@@ -29,6 +29,9 @@ protected:
 	Vector m_velocity;
 
 	Vector m_prevPosition;
+
+private:
+	float m_speed;
 };
 
 #endif

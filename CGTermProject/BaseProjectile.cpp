@@ -2,17 +2,23 @@
 
 const static float GRAVITY = .01;
 
-BaseProjectile::BaseProjectile( Vector center ) :
+BaseProjectile::BaseProjectile( Vector center, float speed ) :
   GameObject( center )
 , m_type( ProjectileTypes::INVALID_PROJECTILE )
 , m_velocity( 0, 0, 0 )
 , m_prevPosition( center )
+, m_speed( speed )
 {
 }
 
 
 BaseProjectile::~BaseProjectile()
 {
+}
+
+void BaseProjectile::setVelocity( Vector velocity )
+{
+	m_velocity = velocity.unit() * m_speed;
 }
 
 // moves projectile to next position based on velocity

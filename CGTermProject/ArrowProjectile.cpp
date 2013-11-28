@@ -1,8 +1,9 @@
 #include "ArrowProjectile.h"
 
+static const float SPEED = 1.0;
 
 ArrowProjectile::ArrowProjectile( Vector center ) :
-  BaseProjectile( center )
+  BaseProjectile( center, SPEED )
 {
 	m_type = ProjectileTypes::ARROW;
 }

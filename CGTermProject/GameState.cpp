@@ -8,7 +8,7 @@
 #include "Game.h"
 #include "Vector.h"
 #include "Crosshair.h"
-#include "BubbleProjectile.h"
+#include "CannonballProjectile.h"
 #include "RayProjectile.h"
 
 #ifdef __APPLE__
@@ -155,8 +155,8 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 		clickY = -( y - ( ( eyeY / ( frustumHalfHeight ) ) * ( windowHalfHeight ) + ( windowHalfHeight ) ) ) / ( windowHeight / frustumHeight );
 		clickZ = eyeZ - frustumNear;
 
-		BaseProjectile* p = new BubbleProjectile( eyePos );
-		p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ).unit() ); // TODO: Task #2
+		BaseProjectile* p = new CannonballProjectile( eyePos );
+		p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ) );
 		m_activeProjectiles.push_back( p );
 	}
 

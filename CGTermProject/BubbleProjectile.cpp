@@ -12,11 +12,11 @@
 #include <GL/glut.h>
 #endif
 
-const static float RADIUS = 1;
 const static uint SLICES_AND_STACKS = 10;
 
-BubbleProjectile::BubbleProjectile( Vector center ) :
-  BaseProjectile( center )
+BubbleProjectile::BubbleProjectile( Vector center, float radius, float speed ) :
+  BaseProjectile( center, speed )
+, m_radius( radius )
 {
 	m_type = ProjectileTypes::BUBBLE;
 }
@@ -32,7 +32,7 @@ void BubbleProjectile::draw()
 	glPushMatrix();
 
 	glTranslatef( getCenterX(), getCenterY(), getCenterZ() );
-	glutSolidSphere( RADIUS, SLICES_AND_STACKS, SLICES_AND_STACKS );
+	glutSolidSphere( m_radius, SLICES_AND_STACKS, SLICES_AND_STACKS );
 
 	glPopMatrix();
 }
@@ -64,7 +64,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
 
 					// if point of intersection is within bounds of circle target face
-					if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= ( t->getRadius() + RADIUS ) )
+					if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= ( t->getRadius() + m_radius ) )
 					{
 						t->setIsHit( true );
 						break;
@@ -84,7 +84,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
 
 					// if point of intersection is within bounds of circle target face
-					if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= ( t->getRadius() + RADIUS ) )
+					if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= ( t->getRadius() + m_radius ) )
 					{
 						t->setIsHit( true );
 					}

@@ -6,6 +6,7 @@ struct ProjectileTypes
 {
 	enum id
 	{
+		CANNONBALL,
 		BUBBLE,
 		SPREAD,
 		ARROW,

@@ -5,9 +5,10 @@
 #include "Target.h"
 #include "Plane.h"
 
+static const float SPEED = 1000.0;
 
 RayProjectile::RayProjectile( Vector center ) :
-  BaseProjectile( center )
+  BaseProjectile( center, SPEED )
 {
 	m_type = ProjectileTypes::RAY;
 }
