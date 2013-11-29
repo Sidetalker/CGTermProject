@@ -23,6 +23,7 @@ public:
 	virtual void mouseMotion( int x, int y );
 
 private:
+	ProjectileTypes::id m_curProjectile;
 
 	unsigned int m_numTargets;
 

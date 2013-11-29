@@ -1,5 +1,5 @@
-#ifndef CANNONBALL_PROJECTILE
-#define CANNONBALL_PROJECTILE
+#ifndef CANNONBALL_PROJECTILE_H
+#define CANNONBALL_PROJECTILE_H
 
 #include "BubbleProjectile.h"
 

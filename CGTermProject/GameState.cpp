@@ -1,4 +1,5 @@
 #include <cmath>
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -9,6 +10,7 @@
 #include "Vector.h"
 #include "Crosshair.h"
 #include "CannonballProjectile.h"
+#include "SpreadProjectile.h"
 #include "RayProjectile.h"
 
 #ifdef __APPLE__
@@ -16,6 +18,11 @@
 #else
 #  include <GL/glut.h>
 #endif
+
+static const int SPREAD_PRECISION = 10;
+static const int HALF_SPREAD_PRECISION = SPREAD_PRECISION >> 1;
+static const float SPREAD_FACTOR = 0.5;
+static const uint NUM_SPREAD = 10;
 
 // outermost scene rotation FOR TESTING PURPOSES ONLY
 float Yangle = 0;
@@ -26,7 +33,8 @@ float projectileStep = 0.0;
 using namespace std;
 
 GameState::GameState() :
-  m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
+  m_curProjectile( ProjectileTypes::SPREAD )
+, m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
 , m_score( 0 )
 , clickX( 0 )
 , clickY( 0 )
@@ -34,6 +42,9 @@ GameState::GameState() :
 , m_pCrosshair( new Crosshair() )
 , m_activeProjectiles()
 {
+	// seed system time into the generator
+	srand( ( unsigned )time( 0 ) );
+
 	setup();
 }
 
@@ -155,9 +166,42 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 		clickY = -( y - ( ( eyeY / ( frustumHalfHeight ) ) * ( windowHalfHeight ) + ( windowHalfHeight ) ) ) / ( windowHeight / frustumHeight );
 		clickZ = eyeZ - frustumNear;
 
-		BaseProjectile* p = new CannonballProjectile( eyePos );
-		p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ) );
-		m_activeProjectiles.push_back( p );
+		switch ( m_curProjectile )
+		{
+			case ProjectileTypes::RAY:
+			{
+				BaseProjectile* p = new RayProjectile( eyePos );
+				p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ) );
+				m_activeProjectiles.push_back( p );
+				break;
+			}
+			case ProjectileTypes::CANNONBALL:
+			{
+				BaseProjectile* p = new CannonballProjectile( eyePos );
+				p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ) );
+				m_activeProjectiles.push_back( p );
+				break;
+			}
+			case ProjectileTypes::SPREAD:
+			{
+				// TODO: figure out randomness
+				for ( uint i = 0; i < NUM_SPREAD; ++i )
+				{
+					// generates random float between -1 and 1
+					const float x = ( ( float )( ( rand() % ( SPREAD_PRECISION ) ) - HALF_SPREAD_PRECISION ) ) / HALF_SPREAD_PRECISION;
+					const float y = ( ( float )( ( rand() % ( SPREAD_PRECISION ) ) - HALF_SPREAD_PRECISION ) ) / HALF_SPREAD_PRECISION;
+
+					BaseProjectile* p = new SpreadProjectile( eyePos );
+					p->setVelocity( ( Vector( clickX + ( x * SPREAD_FACTOR ), clickY + ( y * SPREAD_FACTOR ), clickZ ) - eyePos ) );
+					m_activeProjectiles.push_back( p );
+				}
+				break;
+			}
+			default:
+			{
+				// error, invalid type
+			}
+		}
 	}
 
 	glutPostRedisplay();
