@@ -7,12 +7,12 @@ struct ProjectileTypes
 	enum id
 	{
 		CANNONBALL,
-		BUBBLE,
 		SPREAD,
 		ARROW,
 		RAY,
 		
 		NUM_PROJECTILES,
+		BUBBLE,
 		INVALID_PROJECTILE
 	};
 };

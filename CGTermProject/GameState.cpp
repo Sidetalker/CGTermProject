@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ArrowProjectile.h"
 #include "GameState.h"
 #include "Globals.h"
 #include "Game.h"
@@ -86,6 +87,7 @@ void GameState::update()
     
     glLoadIdentity();
     gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, 0.0, 1.0, 0.0);
+
 
 	glRotatef(Yangle, 0.0, 1.0, 0.0);
     
@@ -179,6 +181,13 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 			case ProjectileTypes::CANNONBALL:
 			{
 				BaseProjectile* p = new CannonballProjectile( eyePos );
+				p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ) );
+				m_activeProjectiles.push_back( p );
+				break;
+			}
+			case ProjectileTypes::ARROW:
+			{
+				BaseProjectile* p = new ArrowProjectile( eyePos );
 				p->setVelocity( ( Vector( clickX, clickY, clickZ ) - eyePos ) );
 				m_activeProjectiles.push_back( p );
 				break;
@@ -439,6 +448,9 @@ void GameState::drawHUD()
 			break;
 		case ProjectileTypes::RAY:
 			projectileType = "Ray";
+			break;
+		case ProjectileTypes::ARROW:
+			projectileType = "Arrow";
 			break;
 		default:
 			projectileType = "Error, unimplemented type.";

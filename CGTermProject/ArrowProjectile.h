@@ -1,16 +1,15 @@
 #ifndef ARROW_PROJECTILE_H
 #define ARROW_PROJECTILE_H
 
-#include "BaseProjectile.h"
+#include "BubbleProjectile.h"
 
-class ArrowProjectile : public BaseProjectile
+class ArrowProjectile : public BubbleProjectile
 {
 public:
 	ArrowProjectile( Vector center );
 	virtual ~ArrowProjectile();
 
 	virtual void draw();
-	virtual void checkCollisions( BaseTarget* targets[], uint numTargets );
 
 private:
 
