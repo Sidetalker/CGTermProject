@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
+#include <string.h>
 
 #include "GameState.h"
 #include "Globals.h"
@@ -255,7 +256,7 @@ void GameState::keyInput( unsigned char key, int x, int y )
 			if (Yangle < 0.0) Yangle += 360.0;
 			glutPostRedisplay();
 			break;
-		case 'a': // display status of scene FOR TESTING PURPOSES ONLY
+		case 's': // display status of scene FOR TESTING PURPOSES ONLY
 			for ( int i = 0; i < TARGET_COUNT; i++ )
 			{
 				std::cout << "Target " << i << ": " << arrayTargets[i]->getCenterX() << " " << arrayTargets[i]->getCenterY() << " " << arrayTargets[i]->getCenterZ() << std::endl;
@@ -267,6 +268,28 @@ void GameState::keyInput( unsigned char key, int x, int y )
 				arrayTargets[ i ]->setIsHit( false );
 			}
 			break;
+		case 'd': // cycle forward through projectiles
+		{
+			m_curProjectile = ( ProjectileTypes::id )( ( int )m_curProjectile + 1 );
+			
+			// loop back to beginning if necessary
+			if ( m_curProjectile == ProjectileTypes::NUM_PROJECTILES )
+			{
+				m_curProjectile = ( ProjectileTypes::id )0;
+			}
+			break;
+		}
+		case 'a': // cycle backward through projectiles
+		{
+			m_curProjectile = ( ProjectileTypes::id )( ( int )m_curProjectile - 1 );
+			
+			// loop back to end if necessary
+			if ( m_curProjectile == ( ProjectileTypes::id ) -1 )
+			{
+				m_curProjectile = ( ProjectileTypes::id )( ( int )ProjectileTypes::NUM_PROJECTILES - 1 );
+			}
+			break;
+		}
         default:
             break;
     }
@@ -382,6 +405,7 @@ void GameState::drawHUD()
 	// create c-style strings
 	sprintf(scoreString,"SCORE: %d", m_score);
 	sprintf(highScoreString,"HIGH SCORE: %d", 999999);
+	char* projectileType;
 		
 	// color of text
 	glColor3f( 0.0, 0.0, 0.0 );
@@ -389,7 +413,7 @@ void GameState::drawHUD()
 	// set raster to top left corner (15 is for font height)
 	glRasterPos2f( 0, game->getCamera()->getWindowHeight() - 15 );
 
-	// render text
+	// render score
 	for ( char* c = scoreString; *c != '\0'; c++ )
 	{
 		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
@@ -398,8 +422,34 @@ void GameState::drawHUD()
 	// set raster to top left corner (15 is for font height)
 	glRasterPos2f( 0, game->getCamera()->getWindowHeight() - 30 );
 	
-	// render text
+	// render high score
 	for ( char* c = highScoreString; *c != '\0'; c++ )
+	{
+		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
+	}
+
+	// use correct string
+	switch ( m_curProjectile )
+	{
+		case ProjectileTypes::CANNONBALL:
+			projectileType = "Cannonball";
+			break;
+		case ProjectileTypes::SPREAD:
+			projectileType = "Spread";
+			break;
+		case ProjectileTypes::RAY:
+			projectileType = "Ray";
+			break;
+		default:
+			projectileType = "Error, unimplemented type.";
+			break;
+	}
+
+	// set raster to top right corner (15 is for font height, flushes up against right size)
+	glRasterPos2f( game->getCamera()->getWindowWidth() - ( strlen( projectileType ) * 9 ), game->getCamera()->getWindowHeight() - 15 );
+
+	// render projectile type
+	for ( char* c = projectileType; *c != '\0'; c++ )
 	{
 		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
 	}

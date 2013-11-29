@@ -1,8 +1,6 @@
 #ifndef BASE_PROJECTILE_H
 #define BASE_PROJECTILE_H
 
-#include <vector>
-
 #include "GameObject.h"
 #include "BaseTarget.h"
 #include "Vector.h"
