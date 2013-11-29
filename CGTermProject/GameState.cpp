@@ -14,6 +14,8 @@
 #include "CannonballProjectile.h"
 #include "SpreadProjectile.h"
 #include "RayProjectile.h"
+#include "Textures.h"
+#include "TextureDefs.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -106,6 +108,7 @@ void GameState::update()
 //        glEnd();
 //    }
     
+	/*
     // Draw floor as a stack of triangle strips.
     for(z = 100.0; z > -100.0; z -= 5.0)
     {
@@ -122,11 +125,26 @@ void GameState::update()
         glEnd();
         i++;
     }
-    
+	*/
+
+	// Map the grid texture onto a rectangle along the xz-plane.
+	glEnable( GL_TEXTURE_2D ); // Enable 2D textures
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE ); // Set texture environment parameters
+
+	// Draw rectangle with grid
+	glBindTexture( GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::GRID ] );      
+	glBegin( GL_POLYGON );
+		glTexCoord2f( 0.0, 0.0 ); glVertex3f( -100.0, 0.0, 100.0 );
+		glTexCoord2f( 30.0, 0.0 ); glVertex3f( 100.0, 0.0, 100.0 );
+		glTexCoord2f( 30.0, 30.0 ); glVertex3f( 100.0, 0.0, -100.0 );
+		glTexCoord2f( 0.0, 30.0 ); glVertex3f( -100.0, 0.0, -100.0 );
+	glEnd();
+
+	glDisable( GL_TEXTURE_2D );
+
 	updateActiveProjectiles();
 	drawActiveProjectiles();
 	drawHUD();
-
 
     // Draw targets
     for (int i = 0; i < m_numTargets; i++)
@@ -312,7 +330,8 @@ void GameState::updateActiveProjectiles()
 	while ( i != m_activeProjectiles.end() )
 	{
 		// if out of frustum bounds
-		if ( ( *i )->getCenterZ() < -game->getCamera()->getFrustumFar() )
+		if (    ( *i )->getCenterZ() < -game->getCamera()->getFrustumFar()
+			 || ( *i )->getCenterZ() > game->getCamera()->getPosZ() )
 		{
 			// free memory!
 			delete ( *i );

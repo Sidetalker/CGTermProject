@@ -101,19 +101,69 @@ void Textures::loadTextures()
 
 	while ( textureIndex < TextureTypes::NUM_TEXTURES )
 	{
+		// filter mode
+		unsigned int filter;
+
 		textureFilenames >> textureFilename;
+		textureFilenames >> filter;
 
 		// Load the textures.
 		BitMapFile* image = getBMPData( "Textures/" + textureFilename );
 
-		// Bind target image to texture image.
-		glBindTexture(GL_TEXTURE_2D, m_textureIndices[ textureIndex ]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->sizeX, image->sizeY, 0,
-		             GL_RGB, GL_UNSIGNED_BYTE, image->m_data);
+		glBindTexture( GL_TEXTURE_2D, m_textureIndices[ textureIndex ] );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+		// switch for filtering
+		switch ( filter )
+		{
+			case 0:
+			{
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+				glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->sizeX, image->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image->m_data );
+				break;
+			}
+			case 1:
+			{
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->sizeX, image->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image->m_data );
+				break;
+			}
+			case 2:
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->sizeX, image->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image->m_data);
+				break;
+			}
+			case 3:
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->sizeX, image->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image->m_data);
+				break;
+			}
+			case 4:
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->sizeX, image->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image->m_data);
+				break;
+			}
+			case 5:
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->sizeX, image->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image->m_data);
+				break;
+			}
+			default:
+			{
+				// error, invalid filter
+			}
+		}
 
 		// ***HANDLE UNHANDLED CLEANUP***
 		delete image;

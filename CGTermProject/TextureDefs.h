@@ -8,6 +8,7 @@ struct TextureTypes
 	{
 		BULLSEYE,
 		TEST_BLUE,
+		GRID,
 		
 		NUM_TEXTURES,
 		INVALID_TEXTURE

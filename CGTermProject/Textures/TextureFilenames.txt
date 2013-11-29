@@ -1,2 +1,11 @@
-RoundTargetTexture.bmp
-TestBlueTargetTexture.bmp
+RoundTargetTexture.bmp 0
+TestBlueTargetTexture.bmp 0
+grid.bmp 5
+
+KEY:
+0 nearest, nearest
+1 linear, linear
+2 linear, nearest mipmap nearest
+3 linear, linear mipmap nearest
+4 linear, nearest mipmap linear
+5 linear, linear mipmap linear
