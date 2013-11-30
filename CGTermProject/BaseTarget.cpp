@@ -41,12 +41,10 @@ void BaseTarget::reset()
 
 void BaseTarget::update()
 {
-	// do nothing if stationary target
-	if ( m_keyFrames.size() == 1 )
-	{
-		return;
-	}
-	else
+
+
+	// if not stationary target
+	if ( m_keyFrames.size() != 1 )
 	{
 		if ( m_bForwardMovement )
 		{
@@ -114,9 +112,20 @@ void BaseTarget::update()
 			}
 		}
 	}
-		//Vector velocity( Vector( m_keyFrames[ m_curFrame + 1 ] - m_keyFrames[ m_curFrame ] ).unit() * m_speed );
-		//m_center = m_center + velocity;
+	// if stationary and not rotating, EARLY RETURN
+	else if ( m_rotSpeed == 0.0 )
+	{
+		return;
+	}
 
-		// post update function (update normals, etc.)
-		postUpdate();
+	// rotate angle
+	m_rotAngle += m_rotSpeed;
+
+	if ( m_rotAngle >= 360 )
+	{
+		m_rotAngle -= 360;
+	}
+
+	// post update function (update normals, etc.)
+	postUpdate();
 }
