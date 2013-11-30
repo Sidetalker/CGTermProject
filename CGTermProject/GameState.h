@@ -9,8 +9,6 @@
 #include "Target.h"
 #include "Crosshair.h"
 
-#define TARGET_COUNT 5 // TODO: remove dependency
-
 class GameState : public BaseState
 {
 public:
@@ -39,7 +37,7 @@ private:
 	Crosshair* m_pCrosshair;
 
 	// Global array of targets
-	BaseTarget* arrayTargets[ TARGET_COUNT ];
+    std::list< BaseTarget* > arrayTargets;
 
 	std::list< BaseProjectile* > m_activeProjectiles;
 
