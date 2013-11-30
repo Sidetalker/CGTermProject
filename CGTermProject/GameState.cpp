@@ -29,6 +29,8 @@ static const int HALF_SPREAD_PRECISION = SPREAD_PRECISION >> 1;
 static const float SPREAD_FACTOR = 0.5;
 static const uint NUM_SPREAD = 10;
 
+static const uint TEXT_PADDING = 5;
+
 static const float CLEAR_COLOR[] =
 {
 	0.0,
@@ -405,8 +407,8 @@ void GameState::drawHUD()
 	// draw box for HUD
 	glColor4f( 0.0, 0.0, 0.0, .8 );
 	glBegin( GL_POLYGON );
-		glVertex2f( 0, game->getCamera()->getWindowHeight() - 35 );
-		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() - 35 );
+		glVertex2f( 0, game->getCamera()->getWindowHeight() - ( 30 + TEXT_PADDING ) );
+		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() - ( 30 + TEXT_PADDING ) );
 		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() );
 		glVertex2f( 0, game->getCamera()->getWindowHeight() );
 	glEnd();
@@ -427,7 +429,7 @@ void GameState::drawHUD()
 	glColor3f( 0.251, 0.969, 0.953 );
 
 	// set raster to top left corner (15 is for font height)
-	glRasterPos2f( 0, game->getCamera()->getWindowHeight() - 15 );
+	glRasterPos2f( TEXT_PADDING, game->getCamera()->getWindowHeight() - 15 );
 
 	// render score
 	for ( char* c = scoreString; *c != '\0'; c++ )
@@ -436,7 +438,7 @@ void GameState::drawHUD()
 	}
 	
 	// set raster to top left corner (15 is for font height)
-	glRasterPos2f( 0, game->getCamera()->getWindowHeight() - 30 );
+	glRasterPos2f( TEXT_PADDING, game->getCamera()->getWindowHeight() - 30 );
 	
 	// render high score
 	for ( char* c = highScoreString; *c != '\0'; c++ )
@@ -465,7 +467,7 @@ void GameState::drawHUD()
 	}
 
 	// set raster to top right corner (15 is for font height, flushes up against right size)
-	glRasterPos2f( game->getCamera()->getWindowWidth() - ( strlen( projectileType ) * 9 ), game->getCamera()->getWindowHeight() - 15 );
+	glRasterPos2f( game->getCamera()->getWindowWidth() - ( ( strlen( projectileType ) * 9 ) + TEXT_PADDING ), game->getCamera()->getWindowHeight() - 15 );
 
 	// render projectile type
 	for ( char* c = projectileType; *c != '\0'; c++ )
