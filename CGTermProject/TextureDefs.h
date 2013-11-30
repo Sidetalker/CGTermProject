@@ -7,8 +7,8 @@ struct TextureTypes
 	enum id
 	{
 		BULLSEYE,
-		TEST_BLUE,
 		GRID,
+		WALL,
 		
 		NUM_TEXTURES,
 		INVALID_TEXTURE

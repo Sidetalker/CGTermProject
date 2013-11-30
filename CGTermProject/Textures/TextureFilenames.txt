@@ -1,6 +1,6 @@
-RoundTargetTexture.bmp 0
-TestBlueTargetTexture.bmp 0
-grid.bmp 5
+orangeTarget.bmp 0
+gridFloor.bmp 5
+gridWall.bmp 5
 
 KEY:
 0 nearest, nearest

@@ -33,6 +33,9 @@ private:
 	float clickY;
 	float clickZ;
 
+	float m_floorAlpha;
+	bool m_bFloorAlphaIncreasing;
+
 	Crosshair* m_pCrosshair;
 
 	// Global array of targets
@@ -42,9 +45,12 @@ private:
 
 	void updateActiveProjectiles();
 	void drawActiveProjectiles();
+	void updateFloor();
 	
 	void setup();
 	void drawHUD();
+	void drawFloor();
+	void drawWalls();
 
 	// TODO: remove later...
 	void testDrawShot();

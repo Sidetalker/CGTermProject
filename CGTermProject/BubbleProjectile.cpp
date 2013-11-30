@@ -29,6 +29,8 @@ BubbleProjectile::~BubbleProjectile()
 // simply draws the object in the scene
 void BubbleProjectile::draw()
 {
+	glColor3f( 1.0, 0.0, 0.0 );
+
 	glPushMatrix();
 
 	glTranslatef( getCenterX(), getCenterY(), getCenterZ() );
@@ -39,8 +41,6 @@ void BubbleProjectile::draw()
 
 void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 {
-	glColor3f( 0.0, 0.0, 1.0 );
-
 	// TODO: this is a naiive check, improve on it
 	for ( uint i = 0; i < numTargets; ++i )
 	{

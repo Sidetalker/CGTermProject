@@ -1,3 +1,5 @@
+#include "GameState.h"
+
 #include <cmath>
 #include <ctime>
 #include <iostream>
@@ -6,7 +8,6 @@
 #include <string.h>
 
 #include "ArrowProjectile.h"
-#include "GameState.h"
 #include "Globals.h"
 #include "Game.h"
 #include "Vector.h"
@@ -28,6 +29,14 @@ static const int HALF_SPREAD_PRECISION = SPREAD_PRECISION >> 1;
 static const float SPREAD_FACTOR = 0.5;
 static const uint NUM_SPREAD = 10;
 
+static const float CLEAR_COLOR[] =
+{
+	0.0,
+	0.149,
+	0.565,
+	0.0
+};
+
 // outermost scene rotation FOR TESTING PURPOSES ONLY
 float Yangle = 0;
 
@@ -43,6 +52,8 @@ GameState::GameState() :
 , clickX( 0 )
 , clickY( 0 )
 , clickZ( 0 )
+, m_bFloorAlphaIncreasing( false )
+, m_floorAlpha( 1.0 )
 , m_pCrosshair( new Crosshair() )
 , m_activeProjectiles()
 {
@@ -81,80 +92,34 @@ void GameState::update()
 	const float centerY = game->getCamera()->getCenterY();
 	const float centerZ = game->getCamera()->getCenterZ();
 
-
 	int i = 0;
     float z = 100;
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     
     glLoadIdentity();
-    gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, 0.0, 1.0, 0.0);
+    gluLookAt( eyeX, eyeY, eyeZ, centerX, centerY, centerZ, 0.0, 1.0, 0.0 );
 
+	// TODO: REMOVE: FOR TESTING PURPOSES ONLY
+	glRotatef( Yangle, 0.0, 1.0, 0.0 );
 
-	glRotatef(Yangle, 0.0, 1.0, 0.0);
-    
-//    // Simple black floor
-//    glColor3f(0.0, 0.0, 0.0);
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//    
-//    for(float z=-150.0; z<100.0; z+=5.0)
-//    {
-//        glBegin(GL_TRIANGLE_STRIP);
-//        for(float x=-100.0; x<100.0; x+=5.0)
-//        {
-//            glVertex3f(x, -10.0, z);
-//            glVertex3f(x, -10.0, z+5.0);
-//        }
-//        glEnd();
-//    }
-    
-	/*
-    // Draw floor as a stack of triangle strips.
-    for(z = 100.0; z > -100.0; z -= 5.0)
-    {
-        glBegin(GL_TRIANGLE_STRIP);
-        for(float x = -100.0; x < 100.0; x += 5.0)
-        {
-            if (i % 2) glColor4f(0.0, 0.0, 0.0, 1.0);
-            else glColor4f(1.0, 1.0, 1.0, 1.0);
-            glNormal3f(0.0, 1.0, 0.0);
-            glVertex3f(x, 0.0, z - 5.0);
-            glVertex3f(x, 0.0, z);
-            i++;
-        }
-        glEnd();
-        i++;
-    }
-	*/
-
-	// Map the grid texture onto a rectangle along the xz-plane.
-	glEnable( GL_TEXTURE_2D ); // Enable 2D textures
-	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE ); // Set texture environment parameters
-
-	// Draw rectangle with grid
-	glBindTexture( GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::GRID ] );      
-	glBegin( GL_POLYGON );
-		glTexCoord2f( 0.0, 0.0 ); glVertex3f( -100.0, 0.0, 100.0 );
-		glTexCoord2f( 30.0, 0.0 ); glVertex3f( 100.0, 0.0, 100.0 );
-		glTexCoord2f( 30.0, 30.0 ); glVertex3f( 100.0, 0.0, -100.0 );
-		glTexCoord2f( 0.0, 30.0 ); glVertex3f( -100.0, 0.0, -100.0 );
-	glEnd();
-
-	glDisable( GL_TEXTURE_2D );
-
+	// update changing objects
 	updateActiveProjectiles();
+	updateFloor();
+
+	// draw scene objects
 	drawActiveProjectiles();
-	drawHUD();
+	drawFloor();
+	drawWalls();
+	drawHUD(); // must draw after walls
+	m_pCrosshair->draw();
 
     // Draw targets
     for (int i = 0; i < m_numTargets; i++)
     {
 		if ( !arrayTargets[ i ]->getIsHit() )
 			arrayTargets[i]->draw();
-    }
-    
-	// Draw crosshair
-	m_pCrosshair->draw();
+    }	
 
 	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
 	testDrawShot();
@@ -362,16 +327,19 @@ void GameState::setup()
 {
 	glutSetCursor( GLUT_CURSOR_NONE ); 
 
-    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glClearColor( CLEAR_COLOR[ 0 ],
+	              CLEAR_COLOR[ 1 ],
+	              CLEAR_COLOR[ 2 ],
+	              CLEAR_COLOR[ 3 ] );
     
 	// load identity to initialize matrix (prevent unexpected lighting)
 	glLoadIdentity();
 
     // Lighting stuff from checkeredFloor.cpp
-    glEnable(GL_DEPTH_TEST); // Enable depth testing.
+    glEnable( GL_DEPTH_TEST ); // Enable depth testing.
     
     // Turn on OpenGL lighting.
-    glEnable(GL_LIGHTING);
+    glEnable( GL_LIGHTING );
     
     // Light property vectors.
     float lightAmb[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -380,10 +348,10 @@ void GameState::setup()
     float globAmb[] = { 0.2, 0.2, 0.2, 1.0 };
     
     // Light properties.
-    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDifAndSpec);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, lightDifAndSpec);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glLightfv( GL_LIGHT0, GL_AMBIENT, lightAmb );
+    glLightfv( GL_LIGHT0, GL_DIFFUSE, lightDifAndSpec );
+    glLightfv( GL_LIGHT0, GL_SPECULAR, lightDifAndSpec );
+    glLightfv( GL_LIGHT0, GL_POSITION, lightPos );
     
     glEnable(GL_LIGHT0); // Enable particular light source.
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globAmb); // Global ambient light.
@@ -409,9 +377,9 @@ void GameState::setup()
     // End lighting stuff
     
     // Initialize targets TODO: change to be explicit heap pointers
-    arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 255, 255, 255 );
-    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, Vector(1,1,0), 90, 255, 255, 255 );
-    arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 255, 255, 255 );
+    arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 252, 196, 0 );
+    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, Vector(1,1,0), 90, 252, 196, 0 );
+    arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 252, 196, 0 );
     arrayTargets[3] = new Target();
     arrayTargets[4] = new Target();
 }
@@ -426,6 +394,24 @@ void GameState::drawHUD()
 	// switch to Ortho projection (with new MVM)
 	game->getCamera()->switchToOrtho();
 
+	// enable blending
+	glEnable(GL_BLEND);
+
+	// specify blend function
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+	// draw box for HUD
+	glColor4f( 0.0, 0.0, 0.0, .8 );
+	glBegin( GL_POLYGON );
+		glVertex2f( 0, game->getCamera()->getWindowHeight() - 35 );
+		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() - 35 );
+		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() );
+		glVertex2f( 0, game->getCamera()->getWindowHeight() );
+	glEnd();
+
+	// disable blending
+	glDisable(GL_BLEND);
+
 	// arrays to store score c-style strings (allocating 25 chars should be enough)
 	char scoreString[25];
 	char highScoreString[25];
@@ -434,9 +420,9 @@ void GameState::drawHUD()
 	sprintf(scoreString,"SCORE: %d", m_score);
 	sprintf(highScoreString,"HIGH SCORE: %d", 999999);
 	char* projectileType;
-		
+	
 	// color of text
-	glColor3f( 0.0, 0.0, 0.0 );
+	glColor3f( 0.251, 0.969, 0.953 );
 
 	// set raster to top left corner (15 is for font height)
 	glRasterPos2f( 0, game->getCamera()->getWindowHeight() - 15 );
@@ -484,17 +470,79 @@ void GameState::drawHUD()
 	{
 		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
 	}
-    
+
 	// return to Perspective projection (with old PM)
 	game->getCamera()->returnToPerspective();
-	
+
 	// pop to MVM
 	glPopMatrix();
 	// re-enable lighting
 	glEnable( GL_LIGHTING );
 }
 
+void GameState::drawFloor()
+{
+	glEnable( GL_TEXTURE_2D ); // Enable 2D textures
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE ); // Set texture environment parameters
 
+	// allow for pulsating floor
+	glEnable( GL_BLEND );
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glColor4f( 0.0, 0.0, 0.0, m_floorAlpha );
+
+	// Draw rectangle with grid
+	glBindTexture( GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::GRID ] );      
+	glBegin( GL_POLYGON );
+		glTexCoord2f( 0.0, 0.0 ); glVertex3f( -100.0, 0.0, 100.0 );
+		glTexCoord2f( 30.0, 0.0 ); glVertex3f( 100.0, 0.0, 100.0 );
+		glTexCoord2f( 30.0, 30.0 ); glVertex3f( 100.0, 0.0, -100.0 );
+		glTexCoord2f( 0.0, 30.0 ); glVertex3f( -100.0, 0.0, -100.0 );
+	glEnd();
+
+	glDisable( GL_BLEND );
+
+	glDisable( GL_TEXTURE_2D );
+}
+
+void GameState::drawWalls()
+{
+	glEnable( GL_TEXTURE_2D ); // Enable 2D textures
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE ); // Set texture environment parameters
+
+	// Map the wall texture onto a rectangle parallel to the xy-plane.
+	glBindTexture( GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::WALL ] );        
+	glBegin( GL_POLYGON );
+		glTexCoord2f( 0.0, 0.0 ); glVertex3f( -100.0, 0.0, -60.0 );
+		glTexCoord2f( 1.0, 0.0 ); glVertex3f( 100.0, 0.0, -60.0 );
+		glTexCoord2f( 1.0, 1.0 ); glVertex3f( 100.0, 200.0, -60.0 );
+		glTexCoord2f( 0.0, 1.0 ); glVertex3f( -100.0, 200.0, -60.0 );
+	glEnd();
+
+	glDisable( GL_TEXTURE_2D );
+}
+
+void GameState::updateFloor()
+{
+	// handle pulsating floor
+	if ( m_bFloorAlphaIncreasing )
+	{
+		m_floorAlpha += .003;
+
+		if ( m_floorAlpha >= 1.0 )
+		{
+			m_bFloorAlphaIncreasing = false;
+		}
+	}
+	else
+	{
+		m_floorAlpha -= .003;
+
+		if ( m_floorAlpha <= 0.3 )
+		{
+			m_bFloorAlphaIncreasing = true;
+		}
+	}
+}
 
 ///////////////////////
 // TESTING FUNCTIONS //
