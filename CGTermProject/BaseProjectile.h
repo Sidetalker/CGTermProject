@@ -20,7 +20,11 @@ public:
 
 	void applyVelocity();
 
+	bool hasHitObject() const { return m_bHitObject; }
+
 protected:
+	bool m_bHitObject;
+
 	// type of projectile
 	ProjectileTypes::id m_type;
 

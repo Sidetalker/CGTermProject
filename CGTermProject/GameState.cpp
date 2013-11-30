@@ -295,7 +295,9 @@ void GameState::updateActiveProjectiles()
 	while ( i != m_activeProjectiles.end() )
 	{
 		// if out of frustum bounds
-		if (    ( *i )->getCenterZ() < -game->getCamera()->getFrustumFar()
+		if (    ( *i )->getCenterY() < 0
+			 || ( *i )->hasHitObject()
+			 || ( *i )->getCenterZ() < -game->getCamera()->getFrustumFar()
 			 || ( *i )->getCenterZ() > game->getCamera()->getPosZ() )
 		{
 			// free memory!
@@ -537,7 +539,7 @@ void GameState::updateFloor()
 	{
 		m_floorAlpha -= .003;
 
-		if ( m_floorAlpha <= 0.3 )
+		if ( m_floorAlpha <= 0.1 )
 		{
 			m_bFloorAlphaIncreasing = true;
 		}

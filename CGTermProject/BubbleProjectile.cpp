@@ -67,6 +67,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= ( t->getRadius() + m_radius ) )
 					{
 						t->setIsHit( true );
+						m_bHitObject = true;
 						break;
 					}
 				}
@@ -87,6 +88,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= ( t->getRadius() + m_radius ) )
 					{
 						t->setIsHit( true );
+						m_bHitObject = true;
 					}
 				}
 
