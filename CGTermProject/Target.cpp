@@ -13,6 +13,13 @@
 static const float HALF_THICKNESS = 0.5;
 static const uint POINT_VALUE = 10;
 
+static const unsigned char COLOR[] =
+{
+	252,
+	196,
+	0
+};
+
 // Target default constructor
 Target::Target() :
   BaseTarget( Vector() )
@@ -23,40 +30,44 @@ Target::Target() :
     color[ 2 ] = 0;
 
 	m_type = TargetTypes::BULLSEYE;
+	m_speed = 0;
 }
 
 // Target constructor
-Target::Target( Vector center, float r, unsigned char colorR,
-				   unsigned char colorG, unsigned char colorB ) :
-  BaseTarget( center, Vector(1, 0, 0), 0, POINT_VALUE )
+Target::Target( Vector center, float r, float speed ) :
+  BaseTarget( center, Vector(1, 0, 0), POINT_VALUE )
 , m_radius( r )
 {
-    color[ 0 ] = colorR;
-    color[ 1 ] = colorG;
-    color[ 2 ] = colorB;
+    color[ 0 ] = COLOR[ 0 ];
+    color[ 1 ] = COLOR[ 1 ];
+    color[ 2 ] = COLOR[ 2 ];
 
 	m_nearPlane = Plane( m_center +  Vector( 0.0, 0.0, HALF_THICKNESS ), Vector( 0.0, 0.0, 1.0 ) );
 	m_farPlane = Plane( m_center - Vector( 0.0, 0.0, HALF_THICKNESS ), Vector( 0.0, 0.0, -1.0 ) );
 
 	m_type = TargetTypes::BULLSEYE;
+	m_rotAngle = 0;
+	m_speed = speed;
 }
 
 // Target constructor
-Target::Target( Vector center, float r, Vector rotAxis, float rotAngle, unsigned char colorR,
-				   unsigned char colorG, unsigned char colorB ) :
-  BaseTarget( center, rotAxis, rotAngle, POINT_VALUE )
+Target::Target( Vector center, float speed, float r, Vector rotAxis, float rotSpeed ) :
+  BaseTarget( center, rotAxis, POINT_VALUE )
 , m_radius( r )
 {
-    color[ 0 ] = colorR;
-    color[ 1 ] = colorG;
-    color[ 2 ] = colorB;
+    color[ 0 ] = COLOR[ 0 ];
+    color[ 1 ] = COLOR[ 1 ];
+    color[ 2 ] = COLOR[ 2 ];
 
-	Vector newOffset = Vector( 0.0, 0.0, HALF_THICKNESS ).getRotatedVector( rotAxis, rotAngle );
+	Vector newOffset = Vector( 0.0, 0.0, HALF_THICKNESS ).getRotatedVector( rotAxis, 0.0 );
 
 	m_nearPlane = Plane( m_center +  newOffset, newOffset.unit() );
 	m_farPlane = Plane( m_center - newOffset, newOffset.unit() );
 
 	m_type = TargetTypes::BULLSEYE;
+	m_rotAngle = 0;
+	m_speed = speed;
+	m_rotSpeed = rotSpeed;
 }
 
 Target::~Target()
@@ -119,4 +130,12 @@ void Target::draw()
 		// end of normals FOR TESTING PURPOSES ONLY
 		*/
     }
+}
+
+void Target::postUpdate()
+{
+	Vector newOffset = Vector( 0.0, 0.0, HALF_THICKNESS ).getRotatedVector( m_rotAxis, m_rotAngle );
+
+	m_nearPlane = Plane( m_center +  newOffset, newOffset.unit() );
+	m_farPlane = Plane( m_center - newOffset, newOffset.unit() );
 }

@@ -1,7 +1,7 @@
 #ifndef FILE_READER_H
 #define FILE_READER_H
 
-#include <list>
+#include <vector>
 
 #include "BaseTarget.h"
 
@@ -11,7 +11,7 @@ public:
 	FileReader();
 	~FileReader();
 	
-	static void readTargets( std::list< BaseTarget* > targets );
+	static void readTargets( std::vector< BaseTarget* >& targets );
 
 };
 

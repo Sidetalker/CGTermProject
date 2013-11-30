@@ -6,10 +6,8 @@ class Target : public BaseTarget
 {
 public:
     Target();
-    Target( Vector center, float r, unsigned char colorR,
-             unsigned char colorG, unsigned char colorB );
-	Target( Vector center, float r, Vector rotAxis, float rotAngle, unsigned char colorR,
-             unsigned char colorG, unsigned char colorB );
+    Target( Vector center, float r, float speed );
+	Target( Vector center, float speed, float r, Vector rotAxis, float rotSpeed );
 	virtual ~Target();
 
     float getRadius()  { return m_radius; }
@@ -25,4 +23,6 @@ private:
 	Plane m_farPlane;
 
     unsigned char color[ 3 ];
+
+	virtual void postUpdate();
 };

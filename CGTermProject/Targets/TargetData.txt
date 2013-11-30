@@ -1,0 +1,46 @@
+0
+0.2
+0.0 5.0 0.0
+0.1
+0.0 1.0 0.0
+2
+0.0 20.0 0.0
+1
+
+0
+0.1
+10.0 5.0 15.0
+0.1
+0.0 1.0 0.0
+4
+0.0 5.0 0.0
+-10.0 5.0 10.0
+-10.0 5.0 -10.0
+1
+
+0
+0.1
+-10.0 5.0 10.0
+0.1
+0.0 1.0 0.0
+1
+1
+
+-1 TERMINAL SYMBOL
+
+Type (uint, see below)
+speed (float, can be 0.0)
+xPos yPos zPos (floats)
+
+rotSpeed (float)
+rotAxisX rotAxisY rotAxisZ (floats)
+
+numKeyFrames (uint not including start)
+keyX keyY keyZ (floats)
+keyX keyY keyZ (floats)
+keyX keyY keyZ (floats)
+...
+repeating (bool)
+
+KEY:
+0 Bullseye

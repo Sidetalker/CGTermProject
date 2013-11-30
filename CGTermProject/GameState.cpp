@@ -17,6 +17,7 @@
 #include "RayProjectile.h"
 #include "Textures.h"
 #include "TextureDefs.h"
+#include "FileReader.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -116,11 +117,15 @@ void GameState::update()
 	drawHUD(); // must draw after walls
 	m_pCrosshair->draw();
 
-    // Draw targets
-    for (int i = 0; i < m_numTargets; i++)
+    // draw and update targets
+    for ( uint i = 0; i < m_numTargets; i++ )
     {
 		if ( !arrayTargets[ i ]->getIsHit() )
+		{
 			arrayTargets[i]->draw();
+			arrayTargets[i]->update();
+		}
+
     }	
 
 	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
@@ -329,6 +334,8 @@ void GameState::drawActiveProjectiles()
 // Initialization routine.
 void GameState::setup()
 {
+	FileReader::readTargets( m_targetData );
+
 	glutSetCursor( GLUT_CURSOR_NONE ); 
 
     glClearColor( CLEAR_COLOR[ 0 ],
@@ -381,11 +388,14 @@ void GameState::setup()
     // End lighting stuff
     
     // Initialize targets TODO: change to be explicit heap pointers
-    arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 252, 196, 0 );
-    arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 2.0, Vector(1,1,0), 90, 252, 196, 0 );
-    arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 252, 196, 0 );
-    arrayTargets[3] = new Target();
-    arrayTargets[4] = new Target();
+    //arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 0 );
+    //arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 0.0, 2.0, Vector(1,1,0), 0.0 );
+    //arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 0 );
+    //arrayTargets[3] = new Target();
+    //arrayTargets[4] = new Target();
+	arrayTargets[0] = m_targetData[0];
+	arrayTargets[1] = m_targetData[1];
+	arrayTargets[2] = m_targetData[2];
 }
 
 void GameState::drawHUD()
