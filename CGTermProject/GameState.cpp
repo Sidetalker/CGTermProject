@@ -33,6 +33,8 @@ static const uint NUM_SPREAD = 10;
 static const uint TEXT_PADDING = 5;
 
 static const uint NUM_ROUNDS = 5;
+static const float TIME_PER_ROUND = 20.0;
+static const float TIME_BETWEEN_ROUNDS = 5.0;
 
 static const float CLEAR_COLOR[] =
 {
@@ -57,12 +59,13 @@ GameState::GameState() :
 , clickX( 0 )
 , clickY( 0 )
 , clickZ( 0 )
+, m_timer( 0.0 )
 , m_bFloorAlphaIncreasing( false )
 , m_floorAlpha( 1.0 )
 , m_pCrosshair( new Crosshair() )
 , m_activeProjectiles()
-, m_timer( 0 )
 , m_round( 0 )
+, m_numActiveTargets( 0 )
 {
 	// seed system time into the generator
 	srand( ( unsigned )time( 0 ) );
@@ -120,6 +123,7 @@ void GameState::update()
 	drawFloor();
 	drawWalls();
 	drawHUD(); // must draw after walls
+	m_pCrosshair->draw();
 
 	// call stage update function
 	( this->*m_stageUpdate )();
@@ -379,20 +383,6 @@ void GameState::setup()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     // End lighting stuff
-    
-    // Initialize targets TODO: change to be explicit heap pointers
-    //arrayTargets[0] = new Target( Vector( 0.0, 5.0, 0.0 ), 2.0, 0 );
-    //arrayTargets[1] = new Target( Vector( 10.0, 5.0, 15.0 ), 0.0, 2.0, Vector(1,1,0), 0.0 );
-    //arrayTargets[2] = new Target( Vector( -10.0, 5.0, 10.0 ), 2.0, 0 );
-    //arrayTargets[3] = new Target();
-    //arrayTargets[4] = new Target();
-	arrayTargets[0] = m_targetData[0];
-	arrayTargets[1] = m_targetData[1];
-	arrayTargets[2] = m_targetData[2];
-
-	arrayTargets[0]->reset();
-	arrayTargets[1]->reset();
-	arrayTargets[2]->reset();
 }
 
 void GameState::drawHUD()
@@ -570,11 +560,39 @@ void GameState::updateIntro()
 void GameState::setRound()
 {
 	m_stageUpdate = &GameState::updateRound;
+
+	// increase round number
+	++m_round;
+
+	// reset timer
+	m_timer = TIME_PER_ROUND;
+
+	// TODO: cleanup hacky solution
+	// assigns three targets as active
+	for ( uint i = 0; i < TARGET_COUNT; ++i )
+	{
+		uint randIndex;
+
+		do
+		{
+			randIndex = rand() % m_targetData.size();
+		}
+		while ( m_targetData[ randIndex ]->getStatus() == TargetStatus::ACTIVE );
+
+		arrayTargets[ i ] = m_targetData[ randIndex ];
+		arrayTargets[ i ]->reset();
+	}
+
+	m_numActiveTargets = TARGET_COUNT;
 }
 
 void GameState::updateRound()
 {
-	m_pCrosshair->draw();
+	if ( m_numActiveTargets == 0 )
+	{
+		setEndRound();
+		return;
+	}
 
     // draw and update targets
     for ( uint i = 0; i < m_numTargets; i++ )
@@ -590,25 +608,15 @@ void GameState::updateRound()
 			}
 			// reassign
 			case TargetStatus::HIT:
-			case TargetStatus::INACTIVE:
 			{
 				// get points
-				if ( arrayTargets[ i ]->getStatus()  == TargetStatus::HIT )
-				{
-					m_score += arrayTargets[i]->getCurPointValue();
-				}
+				m_score += m_timer;
 
-				uint randIndex;
+				// set target as inactive
+				arrayTargets[ i ]->setStatus( TargetStatus::INACTIVE );
 
-				// TODO: cleanup hacky solution
-				do
-				{
-					randIndex = rand() % m_targetData.size();
-				}
-				while ( m_targetData[ randIndex ]->getStatus() == TargetStatus::ACTIVE );
-
-				arrayTargets[ i ] = m_targetData[ randIndex ];
-				arrayTargets[ i ]->reset();
+				// decrement counter
+				--m_numActiveTargets;
 
 				break;
 			}
@@ -616,17 +624,38 @@ void GameState::updateRound()
     }	
 
 	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
-	testDrawShot();
+	//testDrawShot();
+
+	//m_timer -= .01; // TODO: unhardcode
+
+	//if ( m_timer <= 0.0 )
+	//{
+	//	setEndRound();
+	//}
+
 }
 
 void GameState::setEndRound()
 {
 	m_stageUpdate = &GameState::updateEndRound;
+
+	m_timer = TIME_BETWEEN_ROUNDS;
 }
 
 void GameState::updateEndRound()
 {
-	setExit();
+	if ( m_round == NUM_ROUNDS )
+	{
+		setExit();
+		return;
+	}
+
+	m_timer -= 0.01;
+
+	if ( m_timer <= 0.0 )
+	{
+		setRound();
+	}
 }
 
 void GameState::setExit()
@@ -636,7 +665,7 @@ void GameState::setExit()
 
 void GameState::updateExit()
 {
-
+	// go back to title or go to high scores or whatever
 }
 
 ///////////////////////

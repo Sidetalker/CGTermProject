@@ -44,60 +44,64 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 	// TODO: this is a naiive check, improve on it
 	for ( uint i = 0; i < numTargets; ++i )
 	{
-		switch ( targets[ i ]->getType() )
+		// prevent double hit
+		if ( targets[ i ]->getStatus() == TargetStatus::ACTIVE )
 		{
-			case TargetTypes::BULLSEYE: // TODO: can be cleaned up?
+			switch ( targets[ i ]->getType() )
 			{
-				// cast as Target
-				Target* t = ( Target* ) targets[ i ];
-
-				// Vector from near plane to current center
-				Vector nearPlaneToCurCenter( ( m_center ) - ( t->getNearPlane().getPoint() ) );
-
-				// Vector from near plane to previous center
-				Vector nearPlaneToPrevCenter( ( m_prevPosition ) - ( t->getNearPlane().getPoint() ) );
-
-				// if opposite signs (crossed the near plane) 
-				if ( ( nearPlaneToPrevCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 != nearPlaneToCurCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 ) )
+				case TargetTypes::BULLSEYE: // TODO: can be cleaned up?
 				{
-					// point on near plane of intersection
-					Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
+					// cast as Target
+					Target* t = ( Target* ) targets[ i ];
 
-					// if point of intersection is within bounds of circle target face
-					if ( ( intersectionNear - t->getNearPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
+					// Vector from near plane to current center
+					Vector nearPlaneToCurCenter( ( m_center ) - ( t->getNearPlane().getPoint() ) );
+
+					// Vector from near plane to previous center
+					Vector nearPlaneToPrevCenter( ( m_prevPosition ) - ( t->getNearPlane().getPoint() ) );
+
+					// if opposite signs (crossed the near plane) 
+					if ( ( nearPlaneToPrevCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 != nearPlaneToCurCenter.dotProduct( t->getNearPlane().getNormal() ) < 0 ) )
 					{
-						t->setStatus( TargetStatus::HIT );
-						m_bHitObject = true;
-						break;
+						// point on near plane of intersection
+						Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
+
+						// if point of intersection is within bounds of circle target face
+						if ( ( intersectionNear - t->getNearPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
+						{
+							t->setStatus( TargetStatus::HIT );
+							m_bHitObject = true;
+							break;
+						}
 					}
+
+					// Vector from far plane to current center
+					Vector farPlaneToCurCenter( ( m_center ) - ( t->getFarPlane().getPoint() ) );
+
+					// Vector from far plane to previous center
+					Vector farPlaneToPrevCenter( ( m_prevPosition ) - ( t->getFarPlane().getPoint() ) );
+
+					// if opposite signs (crossed the far plane) 
+					if ( ( farPlaneToPrevCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 != farPlaneToCurCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 ) )
+					{
+						// point on far plane of intersection
+						Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
+
+						// if point of intersection is within bounds of circle target face
+						if ( ( intersectionFar - t->getFarPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
+						{
+							t->setStatus( TargetStatus::HIT );
+							m_bHitObject = true;
+						}
+					}
+
+					break;
 				}
-
-				// Vector from far plane to current center
-				Vector farPlaneToCurCenter( ( m_center ) - ( t->getFarPlane().getPoint() ) );
-
-				// Vector from far plane to previous center
-				Vector farPlaneToPrevCenter( ( m_prevPosition ) - ( t->getFarPlane().getPoint() ) );
-
-				// if opposite signs (crossed the far plane) 
-				if ( ( farPlaneToPrevCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 != farPlaneToCurCenter.dotProduct( t->getFarPlane().getNormal() ) < 0 ) )
+				default:
 				{
-					// point on far plane of intersection
-					Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
-
-					// if point of intersection is within bounds of circle target face
-					if ( ( intersectionFar - t->getFarPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
-					{
-						t->setStatus( TargetStatus::HIT );
-						m_bHitObject = true;
-					}
+					// invalid target type
+					break;
 				}
-
-				break;
-			}
-			default:
-			{
-				// invalid target type
-				break;
 			}
 		}
 	}

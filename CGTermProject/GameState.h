@@ -53,12 +53,15 @@ private:
 
 	int m_score;
 
-	int m_timer;
 	uint m_round;
+
+	uint m_numActiveTargets;
 
 	float clickX;
 	float clickY;
 	float clickZ;
+
+	float m_timer;
 
 	float m_floorAlpha;
 	bool m_bFloorAlphaIncreasing;
