@@ -29,7 +29,13 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 	// iterate through all current targets
 	for ( uint i = 0; i < numTargets; ++i )
 	{
-		// prevent double hit
+		// prevent double hit for one projectile
+		if ( m_bHitObject == true )
+		{
+			break;
+		}
+
+		// prevent double hit target
 		if ( targets[ i ]->getStatus() == TargetStatus::ACTIVE )
 		{
 			switch ( targets[ i ]->getType() )
@@ -44,6 +50,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					if ( ( intersectionNear - t->getNearPlane().getPoint() ).squareMagnitude() <= pow( t->getRadius(), 2 ) )
 					{
 						targets[ i ]->setStatus( TargetStatus::HIT );
+						m_bHitObject = true;
 						break;
 					}
 
@@ -53,6 +60,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					if ( ( intersectionFar - t->getFarPlane().getPoint() ).squareMagnitude() <= pow( t->getRadius(), 2 ) )
 					{
 						targets[ i ]->setStatus( TargetStatus::HIT );
+						m_bHitObject = true;
 					}
 
 					break;

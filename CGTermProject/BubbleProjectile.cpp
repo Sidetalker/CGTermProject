@@ -44,7 +44,13 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 	// TODO: this is a naiive check, improve on it
 	for ( uint i = 0; i < numTargets; ++i )
 	{
-		// prevent double hit
+		// prevent double hit for one projectile
+		if ( m_bHitObject == true )
+		{
+			break;
+		}
+
+		// prevent double hit target
 		if ( targets[ i ]->getStatus() == TargetStatus::ACTIVE )
 		{
 			switch ( targets[ i ]->getType() )
