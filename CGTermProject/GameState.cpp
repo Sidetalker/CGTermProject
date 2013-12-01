@@ -32,6 +32,8 @@ static const uint NUM_SPREAD = 10;
 
 static const uint TEXT_PADDING = 5;
 
+static const uint NUM_ROUNDS = 5;
+
 static const float CLEAR_COLOR[] =
 {
 	0.0,
@@ -59,11 +61,14 @@ GameState::GameState() :
 , m_floorAlpha( 1.0 )
 , m_pCrosshair( new Crosshair() )
 , m_activeProjectiles()
+, m_timer( 0 )
+, m_round( 0 )
 {
 	// seed system time into the generator
 	srand( ( unsigned )time( 0 ) );
 
 	setup();
+	setIntro();
 }
 
 GameState::~GameState()
@@ -115,49 +120,9 @@ void GameState::update()
 	drawFloor();
 	drawWalls();
 	drawHUD(); // must draw after walls
-	m_pCrosshair->draw();
 
-    // draw and update targets
-    for ( uint i = 0; i < m_numTargets; i++ )
-    {
-		switch ( arrayTargets[ i ]->getStatus() )
-		{
-			// simply draw and update
-			case TargetStatus::ACTIVE:
-			{
-				arrayTargets[i]->draw();
-				arrayTargets[i]->update();
-				break;
-			}
-			// reassign
-			case TargetStatus::HIT:
-			case TargetStatus::INACTIVE:
-			{
-				// get points
-				if ( arrayTargets[ i ]->getStatus()  == TargetStatus::HIT )
-				{
-					m_score += arrayTargets[i]->getCurPointValue();
-				}
-
-				uint randIndex;
-
-				// TODO: cleanup hacky solution
-				do
-				{
-					randIndex = rand() % m_targetData.size();
-				}
-				while ( m_targetData[ randIndex ]->getStatus() == TargetStatus::ACTIVE );
-
-				arrayTargets[ i ] = m_targetData[ randIndex ];
-				arrayTargets[ i ]->reset();
-
-				break;
-			}
-		}
-    }	
-
-	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
-	testDrawShot();
+	// call stage update function
+	( this->*m_stageUpdate )();
 
     glFlush();
 }
@@ -588,6 +553,90 @@ void GameState::updateFloor()
 			m_bFloorAlphaIncreasing = true;
 		}
 	}
+}
+
+// game flow functions
+
+void GameState::setIntro()
+{
+	m_stageUpdate = &GameState::updateIntro;
+}
+
+void GameState::updateIntro()
+{
+	setRound();
+}
+
+void GameState::setRound()
+{
+	m_stageUpdate = &GameState::updateRound;
+}
+
+void GameState::updateRound()
+{
+	m_pCrosshair->draw();
+
+    // draw and update targets
+    for ( uint i = 0; i < m_numTargets; i++ )
+    {
+		switch ( arrayTargets[ i ]->getStatus() )
+		{
+			// simply draw and update
+			case TargetStatus::ACTIVE:
+			{
+				arrayTargets[i]->draw();
+				arrayTargets[i]->update();
+				break;
+			}
+			// reassign
+			case TargetStatus::HIT:
+			case TargetStatus::INACTIVE:
+			{
+				// get points
+				if ( arrayTargets[ i ]->getStatus()  == TargetStatus::HIT )
+				{
+					m_score += arrayTargets[i]->getCurPointValue();
+				}
+
+				uint randIndex;
+
+				// TODO: cleanup hacky solution
+				do
+				{
+					randIndex = rand() % m_targetData.size();
+				}
+				while ( m_targetData[ randIndex ]->getStatus() == TargetStatus::ACTIVE );
+
+				arrayTargets[ i ] = m_targetData[ randIndex ];
+				arrayTargets[ i ]->reset();
+
+				break;
+			}
+		}
+    }	
+
+	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
+	testDrawShot();
+}
+
+void GameState::setEndRound()
+{
+	m_stageUpdate = &GameState::updateEndRound;
+}
+
+void GameState::updateEndRound()
+{
+	setExit();
+}
+
+void GameState::setExit()
+{
+	m_stageUpdate = &GameState::updateExit;
+}
+
+void GameState::updateExit()
+{
+
 }
 
 ///////////////////////

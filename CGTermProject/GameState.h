@@ -14,6 +14,18 @@
 class GameState : public BaseState
 {
 public:
+
+	struct Stage
+	{
+		enum id
+		{
+			INTRO,
+			ROUND,
+			END_ROUND,
+			EXIT
+		};
+	};
+
 	GameState();
 	virtual ~GameState();
 
@@ -23,11 +35,26 @@ public:
 	virtual void mouseMotion( int x, int y );
 
 private:
+	void ( GameState::*m_stageUpdate )();
+
+	void setIntro();
+	void updateIntro();
+	void setRound();
+	void updateRound();
+	void setEndRound();
+	void updateEndRound();
+	void setExit();
+	void updateExit();
+
+private:
 	ProjectileTypes::id m_curProjectile;
 
 	unsigned int m_numTargets;
 
 	int m_score;
+
+	int m_timer;
+	uint m_round;
 
 	float clickX;
 	float clickY;
