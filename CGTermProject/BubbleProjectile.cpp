@@ -64,7 +64,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
 
 					// if point of intersection is within bounds of circle target face
-					if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= ( t->getRadius() + m_radius ) )
+					if ( ( intersectionNear - t->getNearPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
 					{
 						t->setIsHit( true );
 						m_bHitObject = true;
@@ -85,7 +85,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_prevPosition, m_velocity ) );
 
 					// if point of intersection is within bounds of circle target face
-					if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= ( t->getRadius() + m_radius ) )
+					if ( ( intersectionFar - t->getFarPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
 					{
 						t->setIsHit( true );
 						m_bHitObject = true;

@@ -19,6 +19,7 @@ public:
     Vector crossProduct( const Vector& other ) const;
     float dotProduct( const Vector& other ) const;
     float magnitude() const;
+	float squareMagnitude() const;
 	Vector unit() const;
 
 	Vector getRotatedVector( const Vector& axis, float angle ) const;

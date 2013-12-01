@@ -38,7 +38,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 				// check intersection with front circle face
 				Vector intersectionNear = t->getNearPlane().lineIntersect( Line( m_center, m_velocity ) );
 
-				if ( ( intersectionNear - t->getNearPlane().getPoint() ).magnitude() <= t->getRadius() )
+				if ( ( intersectionNear - t->getNearPlane().getPoint() ).squareMagnitude() <= pow( t->getRadius(), 2 ) )
 				{
 					targets[ i ]->setIsHit( true );
 					break;
@@ -47,7 +47,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 				// check intersection with back circle face
 				Vector intersectionFar = t->getFarPlane().lineIntersect( Line( m_center, m_velocity ) );
 
-				if ( ( intersectionFar - t->getFarPlane().getPoint() ).magnitude() <= t->getRadius() )
+				if ( ( intersectionFar - t->getFarPlane().getPoint() ).squareMagnitude() <= pow( t->getRadius(), 2 ) )
 				{
 					targets[ i ]->setIsHit( true );
 				}

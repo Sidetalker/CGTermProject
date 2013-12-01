@@ -69,7 +69,7 @@ void BaseTarget::update()
 				Vector nextPos( m_center + velocity );
 
 				// if going to overshoot
-				if ( ( m_center - nextPos ).magnitude() >= ( m_center - m_keyFrames[ m_curFrame + 1 ] ).magnitude() )
+				if ( ( m_center - nextPos ).squareMagnitude() >= ( m_center - m_keyFrames[ m_curFrame + 1 ] ).squareMagnitude() )
 				{
 					m_center = m_keyFrames[ m_curFrame + 1 ];
 					++m_curFrame;
@@ -100,7 +100,7 @@ void BaseTarget::update()
 				Vector nextPos( m_center + velocity );
 
 				// if going to overshoot
-				if ( ( m_center - nextPos ).magnitude() >= ( m_center - m_keyFrames[ m_curFrame - 1 ] ).magnitude() )
+				if ( ( m_center - nextPos ).squareMagnitude() >= ( m_center - m_keyFrames[ m_curFrame - 1 ] ).squareMagnitude() )
 				{
 					m_center = m_keyFrames[ m_curFrame - 1 ];
 					--m_curFrame;

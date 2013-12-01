@@ -68,6 +68,12 @@ float Vector::magnitude() const
     return sqrt( ( m_x * m_x ) + ( m_y * m_y ) + ( m_z * m_z ) );
 }
 
+// returns square magnitude for relative distance checking
+float Vector::squareMagnitude() const
+{
+	return ( m_x * m_x ) + ( m_y * m_y ) + ( m_z * m_z );
+}
+
 // returns unit vector of length 1 and same direction
 Vector Vector::unit() const
 {
