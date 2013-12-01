@@ -15,14 +15,16 @@ class GameState : public BaseState
 {
 public:
 
-	struct Stage
+	struct Stages
 	{
 		enum id
 		{
 			INTRO,
 			ROUND,
 			END_ROUND,
-			EXIT
+			EXIT,
+
+			INVALID_STAGE
 		};
 	};
 
@@ -48,6 +50,8 @@ private:
 
 private:
 	ProjectileTypes::id m_curProjectile;
+
+	Stages::id m_curStage;
 
 	unsigned int m_numTargets;
 

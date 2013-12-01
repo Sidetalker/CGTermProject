@@ -54,6 +54,7 @@ using namespace std;
 
 GameState::GameState() :
   m_curProjectile( ProjectileTypes::SPREAD )
+, m_curStage( Stages::INVALID_STAGE )
 , m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
 , m_score( 0 )
 , clickX( 0 )
@@ -404,8 +405,8 @@ void GameState::drawHUD()
 	// draw box for HUD
 	glColor4f( 0.0, 0.0, 0.0, .8 );
 	glBegin( GL_POLYGON );
-		glVertex2f( 0, game->getCamera()->getWindowHeight() - ( 30 + TEXT_PADDING ) );
-		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() - ( 30 + TEXT_PADDING ) );
+		glVertex2f( 0, game->getCamera()->getWindowHeight() - ( 60 + TEXT_PADDING ) );
+		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() - ( 60 + TEXT_PADDING ) );
 		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() );
 		glVertex2f( 0, game->getCamera()->getWindowHeight() );
 	glEnd();
@@ -416,11 +417,70 @@ void GameState::drawHUD()
 	// arrays to store score c-style strings (allocating 25 chars should be enough)
 	char scoreString[25];
 	char highScoreString[25];
+	char roundString[25];
+	char timerString[30];
 
 	// create c-style strings
-	sprintf(scoreString,"SCORE: %d", m_score);
-	sprintf(highScoreString,"HIGH SCORE: %d", 999999);
+	sprintf_s( scoreString,"SCORE: %d", m_score );
+	sprintf_s( highScoreString,"HIGH SCORE: %d", 999999 ); // TODO: implement high score
+
+	switch ( m_curStage )
+	{
+		case Stages::ROUND:
+		case Stages::END_ROUND:
+		{
+			switch ( m_curStage )
+			{
+				case Stages::ROUND:
+				{
+					sprintf_s( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
+					sprintf_s( timerString,"TIME REMAINING: %d", ( uint )m_timer );
+					break;
+				}
+				case Stages::END_ROUND:
+				{
+					sprintf_s( roundString,"ROUND: %d OF %d", m_round + 1, NUM_ROUNDS );
+					sprintf_s( timerString,"GET READY: %d", ( uint )m_timer );
+					break;
+				}
+			}
+			break;
+		}
+		case Stages::EXIT:
+		{
+			sprintf_s( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
+			sprintf_s( timerString, "GAME OVER: PRESS R TO RESET" );
+			break;
+		}
+		default:
+		{
+			sprintf_s( roundString, "" );
+			sprintf_s( timerString, "" );
+			break;
+		}
+	}
+
 	char* projectileType;
+
+	// use correct string
+	switch ( m_curProjectile )
+	{
+		case ProjectileTypes::CANNONBALL:
+			projectileType = "PROJECTILE: Cannonball";
+			break;
+		case ProjectileTypes::SPREAD:
+			projectileType = "PROJECTILE: Spread";
+			break;
+		case ProjectileTypes::RAY:
+			projectileType = "PROJECTILE: Ray";
+			break;
+		case ProjectileTypes::ARROW:
+			projectileType = "PROJECTILE: Arrow";
+			break;
+		default:
+			projectileType = "Error, unimplemented type.";
+			break;
+	}
 	
 	// color of text
 	glColor3f( 0.251, 0.969, 0.953 );
@@ -434,40 +494,38 @@ void GameState::drawHUD()
 		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
 	}
 	
-	// set raster to top left corner (15 is for font height)
+	// set raster to top left corner (30 is for font height)
 	glRasterPos2f( TEXT_PADDING, game->getCamera()->getWindowHeight() - 30 );
 	
 	// render high score
-	for ( char* c = highScoreString; *c != '\0'; c++ )
+	for ( char* c = projectileType; *c != '\0'; c++ )
 	{
 		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
 	}
 
-	// use correct string
-	switch ( m_curProjectile )
+	// set raster to top right corner (45 is for font height, flushes up against right size)
+	glRasterPos2f( TEXT_PADDING, game->getCamera()->getWindowHeight() - 45 );
+
+	// render projectile type
+	for ( char* c = roundString; *c != '\0'; c++ )
 	{
-		case ProjectileTypes::CANNONBALL:
-			projectileType = "Cannonball";
-			break;
-		case ProjectileTypes::SPREAD:
-			projectileType = "Spread";
-			break;
-		case ProjectileTypes::RAY:
-			projectileType = "Ray";
-			break;
-		case ProjectileTypes::ARROW:
-			projectileType = "Arrow";
-			break;
-		default:
-			projectileType = "Error, unimplemented type.";
-			break;
+		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
+	}
+
+	// set raster to top right corner (45 is for font height, flushes up against right size)
+	glRasterPos2f( TEXT_PADDING, game->getCamera()->getWindowHeight() - 60 );
+
+	// render projectile type
+	for ( char* c = timerString; *c != '\0'; c++ )
+	{
+		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
 	}
 
 	// set raster to top right corner (15 is for font height, flushes up against right size)
-	glRasterPos2f( game->getCamera()->getWindowWidth() - ( ( strlen( projectileType ) * 9 ) + TEXT_PADDING ), game->getCamera()->getWindowHeight() - 15 );
+	glRasterPos2f( game->getCamera()->getWindowWidth() - ( ( strlen( highScoreString ) * 9 ) + TEXT_PADDING ), game->getCamera()->getWindowHeight() - 15 );
 
 	// render projectile type
-	for ( char* c = projectileType; *c != '\0'; c++ )
+	for ( char* c = highScoreString; *c != '\0'; c++ )
 	{
 		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
 	}
@@ -550,6 +608,7 @@ void GameState::updateFloor()
 void GameState::setIntro()
 {
 	m_stageUpdate = &GameState::updateIntro;
+	m_curStage = Stages::INTRO;
 }
 
 void GameState::updateIntro()
@@ -560,6 +619,7 @@ void GameState::updateIntro()
 void GameState::setRound()
 {
 	m_stageUpdate = &GameState::updateRound;
+	m_curStage = Stages::ROUND;
 
 	// increase round number
 	++m_round;
@@ -638,6 +698,7 @@ void GameState::updateRound()
 void GameState::setEndRound()
 {
 	m_stageUpdate = &GameState::updateEndRound;
+	m_curStage = Stages::END_ROUND;
 
 	m_timer = TIME_BETWEEN_ROUNDS;
 }
@@ -661,6 +722,7 @@ void GameState::updateEndRound()
 void GameState::setExit()
 {
 	m_stageUpdate = &GameState::updateExit;
+	m_curStage = Stages::EXIT;
 }
 
 void GameState::updateExit()
