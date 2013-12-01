@@ -6,18 +6,31 @@
 #include "GameObject.h"
 #include "TargetDefs.h"
 
+// contains the game states
+struct TargetStatus
+{
+	enum id
+	{
+		ACTIVE,
+		INACTIVE,
+		HIT,
+		
+		INVALID_STATUS
+	};
+};
+
 class BaseTarget : public GameObject
 {
 public:
 	BaseTarget( Vector center );
-	BaseTarget( Vector center, Vector rotAxis, uint pointValue );
+	BaseTarget( Vector center, Vector rotAxis, float pointValue );
 	virtual ~BaseTarget();
 
 	TargetTypes::id getType() const { return m_type; }
-	bool getIsHit() const { return m_bIsHit; }
-	void setIsHit( const bool isHit ) { m_bIsHit = isHit; }
+	TargetStatus::id getStatus() const { return m_status; }
+	void setStatus( TargetStatus::id status ) { m_status = status; }
 
-	uint getPointValue() const { return m_pointValue; }
+	float getCurPointValue() const { return m_curPointValue; }
 
 	void addKeyFrame( const Vector& keyFrame );
 	void setRepeatFrames( bool repeat ) { m_bRepeatFrames = repeat; }
@@ -36,8 +49,10 @@ protected:
 	virtual void postUpdate() = 0;
 
 private:
-	uint m_pointValue;
-	bool m_bIsHit;
+	float m_pointValue;
+	float m_curPointValue;
+
+	TargetStatus::id m_status;
 
 	bool m_bForwardMovement;
 	std::vector<Vector> m_keyFrames;

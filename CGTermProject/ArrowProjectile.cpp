@@ -9,9 +9,9 @@
 #endif
 
 static const float SPEED = 0.8;
-static const float RADIUS = .2;
+static const float RADIUS = .5;
 const static uint SLICES_AND_STACKS = 10;
-const static float HALF_LENGTH = 2;
+const static float HALF_LENGTH = 3;
 
 static const float PI = 3.141592653589793238462643383279502884; // TODO: get const from somewhere else
 
@@ -35,7 +35,7 @@ void ArrowProjectile::draw()
 
 	glPushMatrix();
 
-	glColor3f( 0.0, 1.0, 0.0 );
+	glColor3f( 1.0, 0.0, 0.0 );
 
 	// move to position
 	glTranslatef( getCenterX(), getCenterY(), getCenterZ() );
@@ -44,7 +44,7 @@ void ArrowProjectile::draw()
 	glRotatef( angle, axis.getX(), axis.getY(), axis.getZ() );
 
 	// make "arrow tip"
-	glutSolidSphere( .3, 10, 10 );
+	//glutSolidSphere( .3, 10, 10 );
 
 	// make front tip the "origin"
 	glTranslatef( 0.0, 0.0, HALF_LENGTH );

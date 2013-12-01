@@ -40,7 +40,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 
 				if ( ( intersectionNear - t->getNearPlane().getPoint() ).squareMagnitude() <= pow( t->getRadius(), 2 ) )
 				{
-					targets[ i ]->setIsHit( true );
+					targets[ i ]->setStatus( TargetStatus::HIT );
 					break;
 				}
 
@@ -49,7 +49,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 
 				if ( ( intersectionFar - t->getFarPlane().getPoint() ).squareMagnitude() <= pow( t->getRadius(), 2 ) )
 				{
-					targets[ i ]->setIsHit( true );
+					targets[ i ]->setStatus( TargetStatus::HIT );
 				}
 
 				break;

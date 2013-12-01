@@ -11,7 +11,7 @@
 #endif
 
 static const float HALF_THICKNESS = 0.5;
-static const uint POINT_VALUE = 10;
+static const float POINT_VALUE = 20.0;
 
 static const unsigned char COLOR[] =
 {

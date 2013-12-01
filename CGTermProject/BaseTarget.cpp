@@ -1,18 +1,20 @@
 #include "BaseTarget.h"
 
+static const float POINT_LOSS = 0.01;
+
 // default, no rotation
 BaseTarget::BaseTarget( Vector center ) :
   GameObject( center )
 , m_bForwardMovement( true )
-, m_bIsHit( false )
+, m_status( TargetStatus::INACTIVE )
 , m_pointValue( 0 )
 {
 }
 
-BaseTarget::BaseTarget( Vector center, Vector rotAxis, uint pointValue ) :
+BaseTarget::BaseTarget( Vector center, Vector rotAxis, float pointValue ) :
   GameObject( center )
 , m_bForwardMovement( true )
-, m_bIsHit( false )
+, m_status( TargetStatus::INACTIVE )
 , m_rotAxis( rotAxis )
 , m_pointValue( pointValue )
 , m_curFrame( 0 )
@@ -33,15 +35,21 @@ void BaseTarget::addKeyFrame( const Vector& keyFrame )
 void BaseTarget::reset()
 {
 	m_rotAngle = 0;
-	m_center = Vector( 0.0, 0.0, 0.0 );
+	m_center = m_keyFrames[ 0 ];
 	m_curFrame = 0;
 	m_bForwardMovement = true;
-	m_bIsHit = false;
+	m_status = TargetStatus::ACTIVE;
+	m_curPointValue = m_pointValue;
 }
 
 void BaseTarget::update()
 {
+	m_curPointValue -= POINT_LOSS;
 
+	if ( m_curPointValue <= 0.0 )
+	{
+		m_status = TargetStatus::INACTIVE;
+	}
 
 	// if not stationary target
 	if ( m_keyFrames.size() != 1 )
@@ -54,7 +62,7 @@ void BaseTarget::update()
 				// if not repeating
 				if ( !m_bRepeatFrames )
 				{
-					m_bIsHit = true;
+					m_status = TargetStatus::INACTIVE;
 				}
 				// else, reverse
 				else
@@ -86,7 +94,7 @@ void BaseTarget::update()
 			{
 				if ( !m_bRepeatFrames )
 				{
-					m_bIsHit = true;
+					m_status = TargetStatus::INACTIVE;
 				}
 				else
 				{

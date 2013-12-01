@@ -72,9 +72,9 @@ GameState::~GameState()
 	delete m_pCrosshair;
 
 	// free target memory
-	for ( uint i = 0; i < m_numTargets; ++i )
+	for ( uint i = 0; i < m_targetData.size(); ++i )
 	{
-		delete arrayTargets[ i ];
+		delete m_targetData[ i ];
 	}
 
 	// free projectile memory
@@ -120,12 +120,40 @@ void GameState::update()
     // draw and update targets
     for ( uint i = 0; i < m_numTargets; i++ )
     {
-		if ( !arrayTargets[ i ]->getIsHit() )
+		switch ( arrayTargets[ i ]->getStatus() )
 		{
-			arrayTargets[i]->draw();
-			arrayTargets[i]->update();
-		}
+			// simply draw and update
+			case TargetStatus::ACTIVE:
+			{
+				arrayTargets[i]->draw();
+				arrayTargets[i]->update();
+				break;
+			}
+			// reassign
+			case TargetStatus::HIT:
+			case TargetStatus::INACTIVE:
+			{
+				// get points
+				if ( arrayTargets[ i ]->getStatus()  == TargetStatus::HIT )
+				{
+					m_score += arrayTargets[i]->getCurPointValue();
+				}
 
+				uint randIndex;
+
+				// TODO: cleanup hacky solution
+				do
+				{
+					randIndex = rand() % m_targetData.size();
+				}
+				while ( m_targetData[ randIndex ]->getStatus() == TargetStatus::ACTIVE );
+
+				arrayTargets[ i ] = m_targetData[ randIndex ];
+				arrayTargets[ i ]->reset();
+
+				break;
+			}
+		}
     }	
 
 	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
@@ -264,7 +292,7 @@ void GameState::keyInput( unsigned char key, int x, int y )
 		case 'r': // reset targets FOR TESTING PURPOSES ONLY
 			for ( uint i = 0; i < TARGET_COUNT; ++i )
 			{
-				arrayTargets[ i ]->setIsHit( false );
+				arrayTargets[ i ]->setStatus( TargetStatus::ACTIVE );
 			}
 			break;
 		case 'd': // cycle forward through projectiles
@@ -396,6 +424,10 @@ void GameState::setup()
 	arrayTargets[0] = m_targetData[0];
 	arrayTargets[1] = m_targetData[1];
 	arrayTargets[2] = m_targetData[2];
+
+	arrayTargets[0]->reset();
+	arrayTargets[1]->reset();
+	arrayTargets[2]->reset();
 }
 
 void GameState::drawHUD()

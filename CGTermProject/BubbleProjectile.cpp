@@ -66,7 +66,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					// if point of intersection is within bounds of circle target face
 					if ( ( intersectionNear - t->getNearPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
 					{
-						t->setIsHit( true );
+						t->setStatus( TargetStatus::HIT );
 						m_bHitObject = true;
 						break;
 					}
@@ -87,7 +87,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 					// if point of intersection is within bounds of circle target face
 					if ( ( intersectionFar - t->getFarPlane().getPoint() ).squareMagnitude() <= pow( ( t->getRadius() + m_radius ), 2 ) )
 					{
-						t->setIsHit( true );
+						t->setStatus( TargetStatus::HIT );
 						m_bHitObject = true;
 					}
 				}
