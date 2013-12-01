@@ -39,18 +39,10 @@ void BaseTarget::reset()
 	m_curFrame = 0;
 	m_bForwardMovement = true;
 	m_status = TargetStatus::ACTIVE;
-	m_curPointValue = m_pointValue;
 }
 
 void BaseTarget::update()
 {
-	m_curPointValue -= POINT_LOSS;
-
-	if ( m_curPointValue <= 0.0 )
-	{
-		m_status = TargetStatus::INACTIVE;
-	}
-
 	// if not stationary target
 	if ( m_keyFrames.size() != 1 )
 	{

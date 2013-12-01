@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "TargetDefs.h"
 
-// contains the game states
+// contains the target statuses
 struct TargetStatus
 {
 	enum id
@@ -30,7 +30,7 @@ public:
 	TargetStatus::id getStatus() const { return m_status; }
 	void setStatus( TargetStatus::id status ) { m_status = status; }
 
-	float getCurPointValue() const { return m_curPointValue; }
+	float getPointValue() const { return m_pointValue; }
 
 	void addKeyFrame( const Vector& keyFrame );
 	void setRepeatFrames( bool repeat ) { m_bRepeatFrames = repeat; }
@@ -50,7 +50,6 @@ protected:
 
 private:
 	float m_pointValue;
-	float m_curPointValue;
 
 	TargetStatus::id m_status;
 

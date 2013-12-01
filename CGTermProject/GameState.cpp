@@ -626,12 +626,12 @@ void GameState::updateRound()
 	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
 	//testDrawShot();
 
-	//m_timer -= .01; // TODO: unhardcode
+	m_timer -= .01; // TODO: unhardcode
 
-	//if ( m_timer <= 0.0 )
-	//{
-	//	setEndRound();
-	//}
+	if ( m_timer <= 0.0 )
+	{
+		setEndRound();
+	}
 
 }
 
