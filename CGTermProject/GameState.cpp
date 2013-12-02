@@ -452,7 +452,7 @@ void GameState::drawHUD()
 		case Stages::EXIT:
 		{
 			sprintf( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
-			sprintf( timerString, "GAME OVER: PRESS R TO RESET" );
+			sprintf( timerString, "GAME OVER" );
 			break;
 		}
 		default:
