@@ -30,6 +30,8 @@ void TitleState::update()
 
 	glPushMatrix();
         glEnable(GL_TEXTURE_2D);
+		glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+
         glBindTexture(GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::TITLE ] ); // Bind the title screen texture
     
         // Draw a textured quad
@@ -43,10 +45,20 @@ void TitleState::update()
         glDisable(GL_TEXTURE_2D);
         
     
-        glRasterPos3f( -25.0, -18.0, 0.0 );
-        glColor3f( 1.0, 1.0, 1.0 );
-    
-        for ( char* c = "PRESS ANY KEY TO BEGIN (THIS IS A PLACEHOLDER TITLE SCREEN)"; *c != '\0'; c++ ) glutBitmapCharacter( GLUT_BITMAP_HELVETICA_12, *c );
+		glColor3f( 1.0, 1.0, 1.0 );
+
+		glPushMatrix();
+
+		game->getCamera()->switchToOrtho();
+		glRasterPos2f( game->getCamera()->getWindowHalfWidth() - ( 11 * 9 ), game->getCamera()->getWindowHeight() * 0.25 );
+		for ( char* c = "PRESS ANY KEY TO BEGIN"; *c != '\0'; c++ )
+			glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
+
+		game->getCamera()->returnToPerspective();
+
+		// pop to MVM
+		glPopMatrix();
+
     glPopMatrix();
 
 

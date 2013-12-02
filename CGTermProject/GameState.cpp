@@ -94,6 +94,9 @@ GameState::~GameState()
 	}
 
 	glDisable( GL_LIGHTING );
+	glDisable( GL_COLOR_MATERIAL );
+	glDisable( GL_DEPTH_TEST );
+	glDisable( GL_CULL_FACE );
 }
 
 void GameState::update()
