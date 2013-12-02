@@ -16,7 +16,7 @@ public:
 	int m_score;
 	std::string m_initials;
 
-	bool operator<( Score other )
+    bool operator<( const Score other ) const
 	{
 		return m_score > other.m_score;
 	}
