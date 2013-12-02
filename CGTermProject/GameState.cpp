@@ -92,7 +92,8 @@ GameState::~GameState()
 	{
 		delete ( *i );
 	}
-	
+
+	glDisable( GL_LIGHTING );
 }
 
 void GameState::update()
@@ -451,7 +452,7 @@ void GameState::drawHUD()
 		case Stages::EXIT:
 		{
 			sprintf_s( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
-			sprintf_s( timerString, "GAME OVER: PRESS R TO RESET" );
+			sprintf_s( timerString, "GAME OVER" );
 			break;
 		}
 		default:
@@ -731,6 +732,8 @@ void GameState::setExit()
 	m_stageUpdate = &GameState::updateExit;
 	m_curStage = Stages::EXIT;
 
+	m_timer = TIME_BETWEEN_ROUNDS;
+
 	m_highScores.push_back( m_score );
 
 	sort( m_highScores.begin(), m_highScores.end(), greater< uint >() );
@@ -741,6 +744,12 @@ void GameState::setExit()
 void GameState::updateExit()
 {
 	// go back to title or go to high scores or whatever
+	m_timer -= 0.01;
+
+	if ( m_timer <= 0.0 )
+	{
+		game->getStateHandler()->changeState( StateTypes::TITLESTATE );
+	}
 }
 
 ///////////////////////
