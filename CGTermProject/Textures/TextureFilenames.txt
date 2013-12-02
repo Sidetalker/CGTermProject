@@ -1,6 +1,7 @@
 orangeTarget.bmp 0
 gridFloor.bmp 5
 gridWall.bmp 5
+titleScreen.bmp 0
 
 KEY:
 0 nearest, nearest

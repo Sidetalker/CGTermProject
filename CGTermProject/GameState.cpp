@@ -421,8 +421,8 @@ void GameState::drawHUD()
 	char timerString[30];
 
 	// create c-style strings
-	sprintf_s( scoreString,"SCORE: %d", m_score );
-	sprintf_s( highScoreString,"HIGH SCORE: %d", 999999 ); // TODO: implement high score
+	sprintf( scoreString,"SCORE: %d", m_score );
+	sprintf( highScoreString,"HIGH SCORE: %d", 999999 ); // TODO: implement high score
 
 	switch ( m_curStage )
 	{
@@ -433,14 +433,14 @@ void GameState::drawHUD()
 			{
 				case Stages::ROUND:
 				{
-					sprintf_s( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
-					sprintf_s( timerString,"TIME REMAINING: %d", ( uint )m_timer );
+					sprintf( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
+					sprintf( timerString,"TIME REMAINING: %d", ( uint )m_timer );
 					break;
 				}
 				case Stages::END_ROUND:
 				{
-					sprintf_s( roundString,"ROUND: %d OF %d", m_round + 1, NUM_ROUNDS );
-					sprintf_s( timerString,"GET READY: %d", ( uint )m_timer );
+					sprintf( roundString,"ROUND: %d OF %d", m_round + 1, NUM_ROUNDS );
+					sprintf( timerString,"GET READY: %d", ( uint )m_timer );
 					break;
 				}
 			}
@@ -448,14 +448,14 @@ void GameState::drawHUD()
 		}
 		case Stages::EXIT:
 		{
-			sprintf_s( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
-			sprintf_s( timerString, "GAME OVER: PRESS R TO RESET" );
+			sprintf( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
+			sprintf( timerString, "GAME OVER: PRESS R TO RESET" );
 			break;
 		}
 		default:
 		{
-			sprintf_s( roundString, "" );
-			sprintf_s( timerString, "" );
+			sprintf( roundString, "" );
+			sprintf( timerString, "" );
 			break;
 		}
 	}
@@ -550,7 +550,7 @@ void GameState::drawFloor()
 	glColor4f( 0.0, 0.0, 0.0, m_floorAlpha );
 
 	// Draw rectangle with grid
-	glBindTexture( GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::GRID ] );      
+	glBindTexture( GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::GRID ] );
 	glBegin( GL_POLYGON );
 		glTexCoord2f( 0.0, 0.0 ); glVertex3f( -100.0, 0.0, 100.0 );
 		glTexCoord2f( 30.0, 0.0 ); glVertex3f( 100.0, 0.0, 100.0 );
@@ -691,6 +691,12 @@ void GameState::updateRound()
 	if ( m_timer <= 0.0 )
 	{
 		setEndRound();
+        
+        // deactivate current targets
+        for ( uint i = 0; i < m_numTargets; i++ )
+        {
+            arrayTargets[ i ]->setStatus( TargetStatus::INACTIVE );
+        }
 	}
 
 }

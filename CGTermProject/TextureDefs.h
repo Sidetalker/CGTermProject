@@ -9,6 +9,7 @@ struct TextureTypes
 		BULLSEYE,
 		GRID,
 		WALL,
+        TITLE,
 		
 		NUM_TEXTURES,
 		INVALID_TEXTURE

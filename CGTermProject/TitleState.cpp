@@ -3,6 +3,8 @@
 #include "StateDefs.h"
 #include "Globals.h"
 #include "Game.h"
+#include "Textures.h"
+#include "TextureDefs.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -23,28 +25,28 @@ void TitleState::update()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// TODO: make easier to use, maybe have a method of the camera
-	// to automatically load the camera view.
-	//{
-	const float eyeX = game->getCamera()->getPosX();
-	const float eyeY = game->getCamera()->getPosY();
-	const float eyeZ = game->getCamera()->getPosZ();
-
-	const float centerX = game->getCamera()->getCenterX();
-	const float centerY = game->getCamera()->getCenterY();
-	const float centerZ = game->getCamera()->getCenterZ();
-
 	glLoadIdentity();
-	gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, 0.0, 1.0, 0.0);
-	// } END OF TODO: make easier to use
-
+	gluLookAt(0, 0, 30, 0, 0, 0, 0.0, 1.0, 0.0);
 
 	glPushMatrix();
-		glColor3f( 1.0, 1.0, 1.0 );
-		glRasterPos3f( -25.0, 0.0, 0.0 );
-
-		// TODO: Make actual title screen
-		for ( char* c = "PRESS ANY KEY TO BEGIN (THIS IS A PLACEHOLDER TITLE SCREEN)"; *c != '\0'; c++ ) glutBitmapCharacter( GLUT_BITMAP_HELVETICA_12, *c );    
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textures->getTextureIndices()[ TextureTypes::TITLE ] ); // Bind the title screen texture
+    
+        // Draw a textured quad
+        glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f(-10, -10, 20);
+        glTexCoord2f(0, 1.0); glVertex3f(-10, 10, 20);
+        glTexCoord2f(1.0, 1.0); glVertex3f(10, 10, 20);
+        glTexCoord2f(1.0, 0); glVertex3f(10, -10, 20);
+        glEnd();
+    
+        glDisable(GL_TEXTURE_2D);
+        
+    
+        glRasterPos3f( -25.0, -18.0, 0.0 );
+        glColor3f( 1.0, 1.0, 1.0 );
+    
+        for ( char* c = "PRESS ANY KEY TO BEGIN (THIS IS A PLACEHOLDER TITLE SCREEN)"; *c != '\0'; c++ ) glutBitmapCharacter( GLUT_BITMAP_HELVETICA_12, *c );
     glPopMatrix();
 
 
