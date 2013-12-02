@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 #include "ArrowProjectile.h"
 #include "Globals.h"
@@ -91,7 +92,8 @@ GameState::~GameState()
 	{
 		delete ( *i );
 	}
-	
+
+	glDisable( GL_LIGHTING );
 }
 
 void GameState::update()
@@ -333,6 +335,7 @@ void GameState::drawActiveProjectiles()
 void GameState::setup()
 {
 	FileReader::readTargets( m_targetData );
+	FileReader::readHighScores( m_highScores );
 
 	glutSetCursor( GLUT_CURSOR_NONE ); 
 
@@ -706,6 +709,11 @@ void GameState::setEndRound()
 	m_stageUpdate = &GameState::updateEndRound;
 	m_curStage = Stages::END_ROUND;
 
+	for ( uint i = 0; i < TARGET_COUNT; ++i )
+	{
+		arrayTargets[ i ]->setStatus( TargetStatus::INACTIVE );
+	}
+
 	m_timer = TIME_BETWEEN_ROUNDS;
 }
 
@@ -729,11 +737,25 @@ void GameState::setExit()
 {
 	m_stageUpdate = &GameState::updateExit;
 	m_curStage = Stages::EXIT;
+
+	m_timer = TIME_BETWEEN_ROUNDS;
+
+	m_highScores.push_back( m_score );
+
+	sort( m_highScores.begin(), m_highScores.end(), greater< uint >() );
+
+	FileReader::writeHighScores( m_highScores );
 }
 
 void GameState::updateExit()
 {
 	// go back to title or go to high scores or whatever
+	m_timer -= 0.01;
+
+	if ( m_timer <= 0.0 )
+	{
+		game->getStateHandler()->changeState( StateTypes::TITLESTATE );
+	}
 }
 
 ///////////////////////

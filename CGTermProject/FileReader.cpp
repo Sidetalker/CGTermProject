@@ -25,7 +25,7 @@ void FileReader::readTargets( std::vector< BaseTarget* >& targets )
 	float rotSpeed;
 	float rotAxisX, rotAxisY, rotAxisZ;
 	
-	std::ifstream file( "Targets/TargetData.txt" );
+	std::ifstream file( "Data/TargetData.txt" );
 	{
 		if ( !file )
 		{
@@ -81,4 +81,45 @@ void FileReader::readTargets( std::vector< BaseTarget* >& targets )
 		file >> typeInt;
 	}
 
+}
+
+void FileReader::readHighScores( std::vector< int >& scores )
+{
+	std::ifstream file( "Data/HighScoreData.txt" );
+	{
+		if ( !file )
+		{
+			std::cout << "couldn't find file \"HighScoreData.txt\"" << std::endl;
+		}
+	}
+	
+	float score;
+
+	while ( file >> score )
+	{
+		scores.push_back( score );
+	}
+
+	// populate with at least 10 values
+	while ( scores.size() != 10 )
+	{
+		scores.push_back( 0 );
+	}
+}
+
+void FileReader::writeHighScores( std::vector< int >& scores )
+{
+	std::ofstream file( "Data/HighScoreData.txt" );
+	{
+		if ( !file )
+		{
+			std::cout << "couldn't open file \"HighScoreData.txt\"" << std::endl;
+		}
+	}
+
+	// write top 10 scores
+	for ( uint i = 0; i < 10; ++i )
+	{
+		file << scores[ i ] << '\n';
+	}
 }

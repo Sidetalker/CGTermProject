@@ -91,11 +91,11 @@ void Textures::loadTextures()
 	unsigned int textureIndex = 0;
 	string textureFilename;
 
-	ifstream textureFilenames( "Textures/TextureFilenames.txt" );
+	ifstream textureFilenames( "Data/TextureData.txt" );
 	{
 		if ( !textureFilenames )
 		{
-			cout << "couldn't find file \"TextureFilenames.txt\"" << endl;
+			cout << "couldn't find file \"TextureData.txt\"" << endl;
 		}
 	}
 
