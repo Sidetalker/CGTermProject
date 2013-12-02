@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 #include "ArrowProjectile.h"
 #include "Globals.h"
@@ -333,6 +334,7 @@ void GameState::drawActiveProjectiles()
 void GameState::setup()
 {
 	FileReader::readTargets( m_targetData );
+	FileReader::readHighScores( m_highScores );
 
 	glutSetCursor( GLUT_CURSOR_NONE ); 
 
@@ -422,7 +424,7 @@ void GameState::drawHUD()
 
 	// create c-style strings
 	sprintf_s( scoreString,"SCORE: %d", m_score );
-	sprintf_s( highScoreString,"HIGH SCORE: %d", 999999 ); // TODO: implement high score
+	sprintf_s( highScoreString,"HIGH SCORE: %d", max( m_score, m_highScores[ 0 ] ) );
 
 	switch ( m_curStage )
 	{
@@ -700,6 +702,11 @@ void GameState::setEndRound()
 	m_stageUpdate = &GameState::updateEndRound;
 	m_curStage = Stages::END_ROUND;
 
+	for ( uint i = 0; i < TARGET_COUNT; ++i )
+	{
+		arrayTargets[ i ]->setStatus( TargetStatus::INACTIVE );
+	}
+
 	m_timer = TIME_BETWEEN_ROUNDS;
 }
 
@@ -723,6 +730,12 @@ void GameState::setExit()
 {
 	m_stageUpdate = &GameState::updateExit;
 	m_curStage = Stages::EXIT;
+
+	m_highScores.push_back( m_score );
+
+	sort( m_highScores.begin(), m_highScores.end(), greater< uint >() );
+
+	FileReader::writeHighScores( m_highScores );
 }
 
 void GameState::updateExit()

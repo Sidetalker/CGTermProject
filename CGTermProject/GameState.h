@@ -75,6 +75,8 @@ private:
 	// Global array of targets
 	BaseTarget* arrayTargets[ TARGET_COUNT ];
 
+	std::vector < int > m_highScores;
+
 	std::vector < BaseTarget* > m_targetData;
 
 	std::list< BaseProjectile* > m_activeProjectiles;

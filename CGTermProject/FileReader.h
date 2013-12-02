@@ -13,6 +13,10 @@ public:
 	
 	static void readTargets( std::vector< BaseTarget* >& targets );
 
+	static void readHighScores( std::vector< int >& scores );
+
+	static void writeHighScores( std::vector< int >& scores );
+
 };
 
 #endif
