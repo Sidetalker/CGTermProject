@@ -83,7 +83,7 @@ void FileReader::readTargets( std::vector< BaseTarget* >& targets )
 
 }
 
-void FileReader::readHighScores( std::vector< int >& scores )
+void FileReader::readHighScores( std::vector< Score >& scores )
 {
 	std::ifstream file( "Data/HighScoreData.txt" );
 	{
@@ -94,20 +94,23 @@ void FileReader::readHighScores( std::vector< int >& scores )
 	}
 	
 	float score;
+	std::string initials;
 
 	while ( file >> score )
 	{
-		scores.push_back( score );
+		file >> initials;
+
+		scores.push_back( Score( score, initials ) );
 	}
 
 	// populate with at least 10 values
 	while ( scores.size() != 10 )
 	{
-		scores.push_back( 0 );
+		scores.push_back( Score( 1, "AAA" ) );
 	}
 }
 
-void FileReader::writeHighScores( std::vector< int >& scores )
+void FileReader::writeHighScores( std::vector< Score >& scores )
 {
 	std::ofstream file( "Data/HighScoreData.txt" );
 	{
@@ -120,6 +123,6 @@ void FileReader::writeHighScores( std::vector< int >& scores )
 	// write top 10 scores
 	for ( uint i = 0; i < 10; ++i )
 	{
-		file << scores[ i ] << '\n';
+		file << scores[ i ].m_score << " " << scores[ i ].m_initials << '\n';
 	}
 }

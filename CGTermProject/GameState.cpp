@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <algorithm>
 
 #include "ArrowProjectile.h"
@@ -18,7 +19,6 @@
 #include "RayProjectile.h"
 #include "Textures.h"
 #include "TextureDefs.h"
-#include "FileReader.h"
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -57,7 +57,7 @@ GameState::GameState() :
   m_curProjectile( ProjectileTypes::SPREAD )
 , m_curStage( Stages::INVALID_STAGE )
 , m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
-, m_score( 0 )
+, m_playerScore( Score( 0, "" ) )
 , clickX( 0 )
 , clickY( 0 )
 , clickZ( 0 )
@@ -240,6 +240,16 @@ void GameState::mouseMotion( int x, int y )
 // Keyboard input processing routine.
 void GameState::keyInput( unsigned char key, int x, int y )
 {
+	if ( m_curStage == Stages::ENTER_INITIALS )
+	{
+		if ( isalpha( key ) )
+		{
+			m_playerScore.m_initials += key;
+		}
+		// EARLY RETURN (ignore all key actions while inputing)
+		return;
+	}
+
     switch(key)
     {
         case 27:
@@ -424,8 +434,8 @@ void GameState::drawHUD()
 	char timerString[30];
 
 	// create c-style strings
-	sprintf( scoreString,"SCORE: %d", m_score );
-	sprintf( highScoreString,"HIGH SCORE: %d", 999999 ); // TODO: implement high score
+	sprintf( scoreString,"SCORE: %d", m_playerScore.m_score );
+	sprintf( highScoreString,"HIGH SCORE: %d", max( m_playerScore.m_score, m_highScores[ 0 ].m_score ) );
 
 	switch ( m_curStage )
 	{
@@ -453,6 +463,12 @@ void GameState::drawHUD()
 		{
 			sprintf( roundString,"ROUND: %d OF %d", m_round, NUM_ROUNDS );
 			sprintf( timerString, "GAME OVER" );
+			break;
+		}
+		case Stages::ENTER_INITIALS:
+		{
+			sprintf( roundString,"YOU GOT A HIGH SCORE!" );
+			sprintf( timerString, "ENTER INITIALS: %s", m_playerScore.m_initials.c_str() );
 			break;
 		}
 		default:
@@ -533,6 +549,11 @@ void GameState::drawHUD()
 		glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
 	}
 
+	if ( m_curStage == Stages::HIGH_SCORES || m_curStage == Stages::OUTRO )
+	{
+		drawHighScores();
+	}
+
 	// return to Perspective projection (with old PM)
 	game->getCamera()->returnToPerspective();
 
@@ -540,6 +561,54 @@ void GameState::drawHUD()
 	glPopMatrix();
 	// re-enable lighting
 	glEnable( GL_LIGHTING );
+}
+
+void GameState::drawHighScores()
+{
+	// enable blending
+	glEnable( GL_BLEND );
+
+	// specify blend function
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+	// draw box on entire screen
+	glColor4f( 0.0, 0.0, 0.0, .8 );
+	glBegin( GL_POLYGON );
+		glVertex2f( 0, 0 );
+		glVertex2f( game->getCamera()->getWindowWidth(), 0 );
+		glVertex2f( game->getCamera()->getWindowWidth(), game->getCamera()->getWindowHeight() );
+		glVertex2f( 0, game->getCamera()->getWindowHeight() );
+	glEnd();
+
+	glDisable( GL_BLEND );
+
+	glColor3f( 0.251, 0.969, 0.953 );
+
+	for ( uint i = 0; i < 10; ++i )
+	{
+		char scoreString[ 25 ];
+		sprintf( scoreString, "%d", m_highScores[ i ].m_score );
+
+		// set raster to middle left
+		glRasterPos2f( game->getCamera()->getWindowHalfWidth() - ( ( strlen( scoreString ) * 9 ) + 9 ), ( game->getCamera()->getWindowHalfHeight() + ( 15 * 4 ) - ( 15 * i ) ) );
+
+		// render score
+		for ( char* c = scoreString; *c != '\0'; c++ )
+		{
+			glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
+		}
+
+		// set raster to middle right
+		glRasterPos2f( game->getCamera()->getWindowHalfWidth() + ( 9 ), ( game->getCamera()->getWindowHalfHeight() + ( 15 * 4 ) - ( 15 * i ) ) );
+
+		const char* c = m_highScores[ i ].m_initials.c_str();
+
+		// render initials
+		for ( c; *c != '\0'; c++ )
+		{
+			glutBitmapCharacter( GLUT_BITMAP_9_BY_15, *c );
+		}
+	}
 }
 
 void GameState::drawFloor()
@@ -673,7 +742,7 @@ void GameState::updateRound()
 			case TargetStatus::HIT:
 			{
 				// get points
-				m_score += m_timer;
+				m_playerScore.m_score += m_timer;
 
 				// set target as inactive
 				arrayTargets[ i ]->setStatus( TargetStatus::INACTIVE );
@@ -739,23 +808,78 @@ void GameState::setExit()
 	m_curStage = Stages::EXIT;
 
 	m_timer = TIME_BETWEEN_ROUNDS;
-
-	m_highScores.push_back( m_score );
-
-	sort( m_highScores.begin(), m_highScores.end(), greater< uint >() );
-
-	FileReader::writeHighScores( m_highScores );
 }
 
 void GameState::updateExit()
 {
-	// go back to title or go to high scores or whatever
+	// pause briefly
 	m_timer -= 0.01;
 
 	if ( m_timer <= 0.0 )
 	{
-		game->getStateHandler()->changeState( StateTypes::TITLESTATE );
+		if ( m_playerScore.m_score > m_highScores.back().m_score ) // should be 9th element
+		{
+			setEnterInitials();
+		}
+		else
+		{
+			setHighScores();
+		}
 	}
+}
+
+void GameState::setEnterInitials()
+{
+	m_stageUpdate = &GameState::updateEnterInitials;
+	m_curStage = Stages::ENTER_INITIALS;
+}
+
+void GameState::updateEnterInitials()
+{
+	if ( m_playerScore.m_initials.length() >= 3 )
+	{
+		// add player's score to high scores
+		m_highScores.push_back( m_playerScore );
+
+		// sort h to l
+		sort( m_highScores.begin(), m_highScores.end() );
+
+		// write to file
+		FileReader::writeHighScores( m_highScores );
+
+		setHighScores();
+	}
+}
+
+void GameState::setHighScores()
+{
+	m_stageUpdate = &GameState::updateHighScores;
+	m_curStage = Stages::HIGH_SCORES;
+
+	m_timer = TIME_BETWEEN_ROUNDS * 3;
+}
+
+void GameState::updateHighScores()
+{
+	// pause to see high scores
+	m_timer -= 0.01;
+
+	if ( m_timer <= 0.0 )
+	{
+		setOutro();
+	}
+}
+
+void GameState::setOutro()
+{
+	m_stageUpdate = &GameState::updateOutro;
+	m_curStage = Stages::OUTRO;
+}
+
+void GameState::updateOutro()
+{
+	// go back to title
+	game->getStateHandler()->changeState( StateTypes::TITLESTATE );
 }
 
 ///////////////////////

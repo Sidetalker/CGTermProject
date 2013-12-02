@@ -8,6 +8,7 @@
 #include "BaseState.h"
 #include "Target.h"
 #include "Crosshair.h"
+#include "FileReader.h"
 
 #define TARGET_COUNT 3 // TODO: remove dependency
 
@@ -23,6 +24,9 @@ public:
 			ROUND,
 			END_ROUND,
 			EXIT,
+			ENTER_INITIALS,
+			HIGH_SCORES,
+			OUTRO,
 
 			INVALID_STAGE
 		};
@@ -47,6 +51,12 @@ private:
 	void updateEndRound();
 	void setExit();
 	void updateExit();
+	void setEnterInitials();
+	void updateEnterInitials();
+	void setHighScores();
+	void updateHighScores();
+	void setOutro();
+	void updateOutro();
 
 private:
 	ProjectileTypes::id m_curProjectile;
@@ -55,7 +65,7 @@ private:
 
 	unsigned int m_numTargets;
 
-	int m_score;
+	Score m_playerScore;
 
 	uint m_round;
 
@@ -75,7 +85,7 @@ private:
 	// Global array of targets
 	BaseTarget* arrayTargets[ TARGET_COUNT ];
 
-	std::vector < int > m_highScores;
+	std::vector < Score > m_highScores;
 
 	std::vector < BaseTarget* > m_targetData;
 
@@ -87,6 +97,7 @@ private:
 	
 	void setup();
 	void drawHUD();
+	void drawHighScores();
 	void drawFloor();
 	void drawWalls();
 
