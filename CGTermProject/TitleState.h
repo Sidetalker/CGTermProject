@@ -9,6 +9,7 @@ public:
 	TitleState();
 	virtual ~TitleState();
 
+	// called by StateHandler
 	virtual void update();
 	virtual void keyInput( unsigned char key, int x, int y );
 	virtual void mouseAction( int button, int state, int x, int y );

@@ -13,7 +13,7 @@ static const float RADIUS = .5;
 const static uint SLICES_AND_STACKS = 10;
 const static float HALF_LENGTH = 3;
 
-static const float PI = 3.141592653589793238462643383279502884; // TODO: get const from somewhere else
+static const float PI = 3.141592653589793238462643383279502884;
 
 ArrowProjectile::ArrowProjectile( Vector center ) :
   BubbleProjectile( center, RADIUS, SPEED )
@@ -26,6 +26,7 @@ ArrowProjectile::~ArrowProjectile()
 {
 }
 
+// draws to scene
 void ArrowProjectile::draw()
 {
 	// calculate angle of rotation
@@ -42,9 +43,6 @@ void ArrowProjectile::draw()
 
 	// roatate to direction of pointing
 	glRotatef( angle, axis.getX(), axis.getY(), axis.getZ() );
-
-	// make "arrow tip"
-	//glutSolidSphere( .3, 10, 10 );
 
 	// make front tip the "origin"
 	glTranslatef( 0.0, 0.0, HALF_LENGTH );

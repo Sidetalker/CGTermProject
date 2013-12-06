@@ -14,8 +14,6 @@ public:
 
 	void setVelocity( Vector velocity );
 
-	// TODO:
-	// Purpose: flags all hit targets as hit
 	virtual void checkCollisions( BaseTarget* targets[], uint numTargets ) = 0;
 
 	void applyVelocity();

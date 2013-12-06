@@ -32,8 +32,11 @@ public:
 
 	float getPointValue() const { return m_pointValue; }
 
+	// manipulate keyframe data
 	void addKeyFrame( const Vector& keyFrame );
 	void setRepeatFrames( bool repeat ) { m_bRepeatFrames = repeat; }
+
+	// set to initial position
 	void reset();
 	void update();
 
@@ -54,7 +57,9 @@ private:
 	TargetStatus::id m_status;
 
 	bool m_bForwardMovement;
+	// all keyframes for target
 	std::vector<Vector> m_keyFrames;
+	// will it repeat its movement path
 	bool m_bRepeatFrames;
 
 	int m_curFrame;

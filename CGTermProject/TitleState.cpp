@@ -21,6 +21,7 @@ TitleState::~TitleState()
 {
 }
 
+// called by StateHandler
 void TitleState::update()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -49,6 +50,7 @@ void TitleState::update()
 
 		glPushMatrix();
 
+		// draw text
 		game->getCamera()->switchToOrtho();
 		glRasterPos2f( game->getCamera()->getWindowHalfWidth() - ( 11 * 9 ), game->getCamera()->getWindowHeight() * 0.25 );
 		for ( char* c = "PRESS ANY KEY TO BEGIN"; *c != '\0'; c++ )
@@ -64,6 +66,8 @@ void TitleState::update()
 
 	glFlush();
 }
+
+// all called by StateHandler
 
 void TitleState::keyInput( unsigned char key, int x, int y )
 {

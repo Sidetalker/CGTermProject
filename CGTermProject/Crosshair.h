@@ -3,7 +3,6 @@
 
 #include "GameObject.h"
 
-// TODO: implement tracking crosshair
 class Crosshair : public GameObject
 {
 public:

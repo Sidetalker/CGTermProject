@@ -3,6 +3,7 @@
 
 #include "BaseProjectile.h"
 
+// invisible ray
 class RayProjectile : public BaseProjectile
 {
 public:

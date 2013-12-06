@@ -41,6 +41,7 @@ void BaseTarget::reset()
 	m_status = TargetStatus::ACTIVE;
 }
 
+// move target to next keyframe and update its normals
 void BaseTarget::update()
 {
 	// if not stationary target
@@ -68,7 +69,7 @@ void BaseTarget::update()
 
 				Vector nextPos( m_center + velocity );
 
-				// if going to overshoot
+				// if going to overshoot the next keyframe, snap to that keyframe
 				if ( ( m_center - nextPos ).squareMagnitude() >= ( m_center - m_keyFrames[ m_curFrame + 1 ] ).squareMagnitude() )
 				{
 					m_center = m_keyFrames[ m_curFrame + 1 ];

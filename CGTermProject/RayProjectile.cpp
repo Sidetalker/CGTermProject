@@ -24,6 +24,7 @@ void RayProjectile::draw()
 	// ray projectile is "too fast to be visible"
 }
 
+// check for collision with provided array of targets
 void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 {
 	// iterate through all current targets
@@ -40,7 +41,7 @@ void RayProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 		{
 			switch ( targets[ i ]->getType() )
 			{
-				case TargetTypes::BULLSEYE: // TODO: can be cleaned up?
+				case TargetTypes::BULLSEYE:
 				{
 					Target* t = ( Target* ) targets[ i ];
 

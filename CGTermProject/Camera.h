@@ -1,6 +1,7 @@
 #ifndef H_CAMERA
 #define H_CAMERA
 
+// camera class contains projection and matrix data
 class Camera
 {
 public:

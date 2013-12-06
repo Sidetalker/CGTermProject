@@ -39,9 +39,9 @@ void BubbleProjectile::draw()
 	glPopMatrix();
 }
 
+// check for collision with a provided array of targets
 void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 {
-	// TODO: this is a naiive check, improve on it
 	for ( uint i = 0; i < numTargets; ++i )
 	{
 		// prevent double hit for one projectile
@@ -55,7 +55,7 @@ void BubbleProjectile::checkCollisions( BaseTarget* targets[], uint numTargets )
 		{
 			switch ( targets[ i ]->getType() )
 			{
-				case TargetTypes::BULLSEYE: // TODO: can be cleaned up?
+				case TargetTypes::BULLSEYE:
 				{
 					// cast as Target
 					Target* t = ( Target* ) targets[ i ];

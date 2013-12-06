@@ -6,8 +6,6 @@
 
 // Plane class holds equation values as well as various
 // functions for plane operations.
-
-// TODO: continue implementing plane class
 class Plane
 {
 public:
@@ -16,13 +14,16 @@ public:
 	Plane( const Vector& point1, const Vector& point2, const Vector& point3 );
 	~Plane();
 
+	// point on plane intersected by line
 	Vector lineIntersect( const Line& testLine ) const;
+	// new plane when this one is rotated
 	Plane getRotatedPlane( const Vector& axis, float angle ) const;
 
 	Vector getPoint() const { return m_point; }
 	Vector getNormal() const { return m_normal; }
 
 private:
+	// defined by a point and normal
 	Vector m_point;
 	Vector m_normal;
 };

@@ -75,7 +75,7 @@ Textures::BitMapFile* Textures::getBMPData( std::string filename )
     
 	// Reverse color from bgr to rgb.
 	int temp;
-	for (int i = 0; i < size; i += 3)
+	for ( unsigned int i = 0; i < size; i += 3 )
 	{
 		temp = bmp->m_data[i];
 		bmp->m_data[i] = bmp->m_data[i+2];

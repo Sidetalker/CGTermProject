@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iostream>
 
-static const float PI = 3.141592653589793238462643383279502884; // TODO: get const from somewhere else
+static const float PI = 3.141592653589793238462643383279502884;
 
 Vector::Vector() :
   m_x( 0 )

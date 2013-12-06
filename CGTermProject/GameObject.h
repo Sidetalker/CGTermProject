@@ -5,6 +5,7 @@
 
 #include "Vector.h"
 
+// root object
 class GameObject
 {
 public:

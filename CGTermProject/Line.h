@@ -3,6 +3,7 @@
 
 #include "Vector.h"
 
+// util line class
 class Line
 {
 public:
@@ -14,6 +15,7 @@ public:
 	Vector getDirection() const { return m_direction; }
 
 private:
+	// line defined by point and direction
 	Vector m_point;
 	Vector m_direction;
 };

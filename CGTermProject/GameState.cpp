@@ -37,6 +37,8 @@ static const uint NUM_ROUNDS = 5;
 static const float TIME_PER_ROUND = 20.0;
 static const float TIME_BETWEEN_ROUNDS = 5.0;
 
+static const float TIME_DECREMENT = 0.01;
+
 static const float CLEAR_COLOR[] =
 {
 	0.0,
@@ -45,18 +47,12 @@ static const float CLEAR_COLOR[] =
 	0.0
 };
 
-// outermost scene rotation FOR TESTING PURPOSES ONLY
-float Yangle = 0;
-
-// global step counter just FOR TESTING PURPOSES ONLY
-float projectileStep = 0.0;
-
 using namespace std;
 
 GameState::GameState() :
   m_curProjectile( ProjectileTypes::SPREAD )
 , m_curStage( Stages::INVALID_STAGE )
-, m_numTargets( TARGET_COUNT ) // TODO: remove TARGET_COUNT dependency
+, m_numTargets( TARGET_COUNT )
 , m_playerScore( Score( 0, "" ) )
 , clickX( 0 )
 , clickY( 0 )
@@ -93,32 +89,30 @@ GameState::~GameState()
 		delete ( *i );
 	}
 
+	// clean up OpenGL state machine
 	glDisable( GL_LIGHTING );
 	glDisable( GL_COLOR_MATERIAL );
 	glDisable( GL_DEPTH_TEST );
 	glDisable( GL_CULL_FACE );
 }
 
+// update loop called by StateHandler
 void GameState::update()
 {
+	// camera "eye" data
 	const float eyeX = game->getCamera()->getPosX();
 	const float eyeY = game->getCamera()->getPosY();
 	const float eyeZ = game->getCamera()->getPosZ();
 
+	// camera "look at" data
 	const float centerX = game->getCamera()->getCenterX();
 	const float centerY = game->getCamera()->getCenterY();
 	const float centerZ = game->getCamera()->getCenterZ();
-
-	int i = 0;
-    float z = 100;
     
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     
     glLoadIdentity();
     gluLookAt( eyeX, eyeY, eyeZ, centerX, centerY, centerZ, 0.0, 1.0, 0.0 );
-
-	// TODO: REMOVE: FOR TESTING PURPOSES ONLY
-	glRotatef( Yangle, 0.0, 1.0, 0.0 );
 
 	// update changing objects
 	updateActiveProjectiles();
@@ -134,17 +128,21 @@ void GameState::update()
 	// call stage update function
 	( this->*m_stageUpdate )();
 
+	// flush pipeline
     glFlush();
 }
 
-void GameState::mouseAction( int button, int state, int x, int y ) // TODO: cleanup using Vector class instead of many floats
+// called by StateHandler callback
+void GameState::mouseAction( int button, int state, int x, int y )
 {
+	// camera "eye" data
 	const float eyeX = game->getCamera()->getPosX();
 	const float eyeY = game->getCamera()->getPosY();
 	const float eyeZ = game->getCamera()->getPosZ();
 
 	const Vector eyePos( eyeX, eyeY, eyeZ );
 
+	// camera projection data
 	const float frustumWidth = game->getCamera()->getFrustumWidth();
 	const float frustumHalfWidth = game->getCamera()->getFrustumHalfWidth();
 	const float frustumHeight = game->getCamera()->getFrustumHeight();
@@ -158,10 +156,12 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 
 	if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
 	{
+		// translate 2D window coordinates to 3D scene on viewplane
 		clickX = ( x + ( ( eyeX / ( frustumHalfWidth ) ) * ( windowHalfWidth ) - ( windowHalfWidth ) ) ) / ( windowWidth / frustumWidth );
 		clickY = -( y - ( ( eyeY / ( frustumHalfHeight ) ) * ( windowHalfHeight ) + ( windowHalfHeight ) ) ) / ( windowHeight / frustumHeight );
 		clickZ = eyeZ - frustumNear;
 
+		// create appropriate projectile in heap
 		switch ( m_curProjectile )
 		{
 			case ProjectileTypes::RAY:
@@ -187,7 +187,6 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 			}
 			case ProjectileTypes::SPREAD:
 			{
-				// TODO: figure out randomness
 				for ( uint i = 0; i < NUM_SPREAD; ++i )
 				{
 					// generates random float between -1 and 1
@@ -207,17 +206,19 @@ void GameState::mouseAction( int button, int state, int x, int y ) // TODO: clea
 		}
 	}
 
+	// redraw
 	glutPostRedisplay();
 }
 
+// called by StateHandler callback
 void GameState::mouseMotion( int x, int y )
 {
-	// TODO: Hack, fix later to be member of GameState
-
-	const float eyeX = game->getCamera()->getPosX(); // TODO: make private function to map screen to scene
+	// camera "eye" data
+	const float eyeX = game->getCamera()->getPosX();
 	const float eyeY = game->getCamera()->getPosY();
 	const float eyeZ = game->getCamera()->getPosZ();
 
+	// camera projection data
 	const float frustumWidth = game->getCamera()->getFrustumWidth();
 	const float frustumHalfWidth = game->getCamera()->getFrustumHalfWidth();
 	const float frustumHeight = game->getCamera()->getFrustumHeight();
@@ -233,6 +234,7 @@ void GameState::mouseMotion( int x, int y )
 	float posY = -(y - ((eyeY / (frustumHalfHeight))*(windowHalfHeight) + (windowHalfHeight)))/(windowHeight/frustumHeight);
 	float posZ = eyeZ - frustumNear;
 	
+	// set crosshair position
 	m_pCrosshair->setCenterX( posX );
 	m_pCrosshair->setCenterY( posY );
 	m_pCrosshair->setCenterZ( posZ );
@@ -255,31 +257,11 @@ void GameState::keyInput( unsigned char key, int x, int y )
 
     switch(key)
     {
-        case 27:
+        case 27: // exit
+		{
             exit(0);
             break;
-		case 'y': // FOR TESTING PURPOSES ONLY
-			Yangle += 5.0;
-			if (Yangle > 360.0) Yangle -= 360.0;
-			glutPostRedisplay();
-			break;
-		case 'Y': // FOR TESTING PURPOSES ONLY
-			Yangle -= 5.0;
-			if (Yangle < 0.0) Yangle += 360.0;
-			glutPostRedisplay();
-			break;
-		case 's': // display status of scene FOR TESTING PURPOSES ONLY
-			for ( int i = 0; i < TARGET_COUNT; i++ )
-			{
-				std::cout << "Target " << i << ": " << arrayTargets[i]->getCenterX() << " " << arrayTargets[i]->getCenterY() << " " << arrayTargets[i]->getCenterZ() << std::endl;
-			}
-			break;
-		case 'r': // reset targets FOR TESTING PURPOSES ONLY
-			for ( uint i = 0; i < TARGET_COUNT; ++i )
-			{
-				arrayTargets[ i ]->setStatus( TargetStatus::ACTIVE );
-			}
-			break;
+		}
 		case 'd': // cycle forward through projectiles
 		{
 			m_curProjectile = ( ProjectileTypes::id )( ( int )m_curProjectile + 1 );
@@ -303,10 +285,13 @@ void GameState::keyInput( unsigned char key, int x, int y )
 			break;
 		}
         default:
+		{
             break;
+		}
     }
 }
 
+// updates all active projectiles
 void GameState::updateActiveProjectiles()
 {
 	std::list< BaseProjectile* >::iterator i = m_activeProjectiles.begin();
@@ -336,6 +321,7 @@ void GameState::updateActiveProjectiles()
 	}
 }
 
+// draws all active projectiles
 void GameState::drawActiveProjectiles()
 {
 	for ( std::list< BaseProjectile* >::iterator i = m_activeProjectiles.begin(); i != m_activeProjectiles.end(); ++i )
@@ -344,64 +330,64 @@ void GameState::drawActiveProjectiles()
 	}
 }
 
-// Initialization routine.
+// initialization routine
 void GameState::setup()
 {
+	// read data files
 	FileReader::readTargets( m_targetData );
 	FileReader::readHighScores( m_highScores );
 
-	glutSetCursor( GLUT_CURSOR_NONE ); 
-
-    glClearColor( CLEAR_COLOR[ 0 ],
-	              CLEAR_COLOR[ 1 ],
-	              CLEAR_COLOR[ 2 ],
-	              CLEAR_COLOR[ 3 ] );
+	glClearColor( CLEAR_COLOR[ 0 ],
+					CLEAR_COLOR[ 1 ],
+					CLEAR_COLOR[ 2 ],
+					CLEAR_COLOR[ 3 ] );
     
 	// load identity to initialize matrix (prevent unexpected lighting)
 	glLoadIdentity();
 
-    // Lighting stuff from checkeredFloor.cpp
-    glEnable( GL_DEPTH_TEST ); // Enable depth testing.
+	// Lighting stuff from checkeredFloor.cpp
+	glEnable( GL_DEPTH_TEST ); // Enable depth testing.
     
-    // Turn on OpenGL lighting.
-    glEnable( GL_LIGHTING );
+	// Turn on OpenGL lighting.
+	glEnable( GL_LIGHTING );
     
-    // Light property vectors.
-    float lightAmb[] = { 0.0, 0.0, 0.0, 1.0 };
-    float lightDifAndSpec[] = { 1.0, 1.0, 1.0, 1.0 };
-    float lightPos[] = {10.0, 30.0, 25.0, 1.0 };
-    float globAmb[] = { 0.2, 0.2, 0.2, 1.0 };
+	// Light property vectors.
+	float lightAmb[] = { 0.0, 0.0, 0.0, 1.0 };
+	float lightDifAndSpec[] = { 1.0, 1.0, 1.0, 1.0 };
+	float lightPos[] = {10.0, 30.0, 25.0, 1.0 };
+	float globAmb[] = { 0.2, 0.2, 0.2, 1.0 };
     
-    // Light properties.
-    glLightfv( GL_LIGHT0, GL_AMBIENT, lightAmb );
-    glLightfv( GL_LIGHT0, GL_DIFFUSE, lightDifAndSpec );
-    glLightfv( GL_LIGHT0, GL_SPECULAR, lightDifAndSpec );
-    glLightfv( GL_LIGHT0, GL_POSITION, lightPos );
+	// Light properties.
+	glLightfv( GL_LIGHT0, GL_AMBIENT, lightAmb );
+	glLightfv( GL_LIGHT0, GL_DIFFUSE, lightDifAndSpec );
+	glLightfv( GL_LIGHT0, GL_SPECULAR, lightDifAndSpec );
+	glLightfv( GL_LIGHT0, GL_POSITION, lightPos );
     
-    glEnable(GL_LIGHT0); // Enable particular light source.
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globAmb); // Global ambient light.
+	glEnable(GL_LIGHT0); // Enable particular light source.
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globAmb); // Global ambient light.
     
 	// Material property vectors.
-    float matSpec[] = { 1.0, 1.0, 1.0, 1.0 };
-    float matShine[] = { 50.0 };
-    
-    // Material properties.
-    glMaterialfv(GL_FRONT, GL_SPECULAR, matSpec);
-    glMaterialfv(GL_FRONT, GL_SHININESS, matShine);
-    
-    // Enable color material mode.
-    glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-    
-    // Flat shading to obtain the checkered pattern of the floor.
-    glShadeModel(GL_FLAT);
-    
-    // Cull back faces.
+	float matSpec[] = { 1.0, 1.0, 1.0, 1.0 };
+	float matShine[] = { 50.0 };
+	
+	// Material properties.
+	glMaterialfv(GL_FRONT, GL_SPECULAR, matSpec);
+	glMaterialfv(GL_FRONT, GL_SHININESS, matShine);
+	
+	// Enable color material mode.
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	
+	// Flat shading to obtain the checkered pattern of the floor.
+	glShadeModel(GL_FLAT);
+
+	// Cull back faces.
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    // End lighting stuff
+	glCullFace(GL_BACK);
+	// End lighting stuff
 }
 
+// draws HUD elements
 void GameState::drawHUD()
 {
 	// push current MVM
@@ -566,6 +552,7 @@ void GameState::drawHUD()
 	glEnable( GL_LIGHTING );
 }
 
+// draws high scores to screen
 void GameState::drawHighScores()
 {
 	// enable blending
@@ -614,6 +601,7 @@ void GameState::drawHighScores()
 	}
 }
 
+// draws grid floor
 void GameState::drawFloor()
 {
 	glEnable( GL_TEXTURE_2D ); // Enable 2D textures
@@ -638,6 +626,7 @@ void GameState::drawFloor()
 	glDisable( GL_TEXTURE_2D );
 }
 
+// draw textured wall
 void GameState::drawWalls()
 {
 	glEnable( GL_TEXTURE_2D ); // Enable 2D textures
@@ -655,6 +644,7 @@ void GameState::drawWalls()
 	glDisable( GL_TEXTURE_2D );
 }
 
+// animate floor
 void GameState::updateFloor()
 {
 	// handle pulsating floor
@@ -702,7 +692,6 @@ void GameState::setRound()
 	// reset timer
 	m_timer = TIME_PER_ROUND;
 
-	// TODO: cleanup hacky solution
 	// assigns three targets as active
 	for ( uint i = 0; i < TARGET_COUNT; ++i )
 	{
@@ -756,12 +745,9 @@ void GameState::updateRound()
 				break;
 			}
 		}
-    }	
+    }
 
-	// FOR TESTING PURPOSES ONLY draw ray from eye through point clicked
-	//testDrawShot();
-
-	m_timer -= .01; // TODO: unhardcode
+	m_timer -= TIME_DECREMENT;
 
 	if ( m_timer <= 0.0 )
 	{
@@ -797,7 +783,7 @@ void GameState::updateEndRound()
 		return;
 	}
 
-	m_timer -= 0.01;
+	m_timer -= TIME_DECREMENT;
 
 	if ( m_timer <= 0.0 )
 	{
@@ -816,7 +802,7 @@ void GameState::setExit()
 void GameState::updateExit()
 {
 	// pause briefly
-	m_timer -= 0.01;
+	m_timer -= TIME_DECREMENT;
 
 	if ( m_timer <= 0.0 )
 	{
@@ -844,7 +830,7 @@ void GameState::updateEnterInitials()
 		// add player's score to high scores
 		m_highScores.push_back( m_playerScore );
 
-		// sort h to l
+		// sort high to low
 		sort( m_highScores.begin(), m_highScores.end() );
 
 		// write to file
@@ -865,7 +851,7 @@ void GameState::setHighScores()
 void GameState::updateHighScores()
 {
 	// pause to see high scores
-	m_timer -= 0.01;
+	m_timer -= TIME_DECREMENT;
 
 	if ( m_timer <= 0.0 )
 	{
@@ -883,28 +869,4 @@ void GameState::updateOutro()
 {
 	// go back to title
 	game->getStateHandler()->changeState( StateTypes::TITLESTATE );
-}
-
-///////////////////////
-// TESTING FUNCTIONS //
-///////////////////////
-
-// function to draw ray from eye to viewplane FOR TESTING PURPOSES ONLY
-void GameState::testDrawShot()
-{
-	const float eyeX = game->getCamera()->getPosX();
-	const float eyeY = game->getCamera()->getPosY();
-	const float eyeZ = game->getCamera()->getPosZ();
-
-	float dx = clickX - eyeX;
-	float dy = clickY - eyeY;
-	float dz = clickZ - eyeZ;
-
-	glColor3f(0,1,1);
-	glLineWidth(5);
-
-	glBegin(GL_LINE_STRIP);
-		glVertex3f(eyeX, eyeY, eyeZ);
-		glVertex3f(eyeX + (10 * dx), eyeY + (10 *dy), eyeZ + (10 * dz));
-	glEnd();
 }

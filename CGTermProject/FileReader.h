@@ -6,6 +6,7 @@
 
 #include "BaseTarget.h"
 
+// score object consists of score and initials
 class Score
 {
 public:

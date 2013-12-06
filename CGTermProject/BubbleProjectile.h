@@ -3,6 +3,7 @@
 
 #include "BaseProjectile.h"
 
+// is superclass to several types of projectiles
 class BubbleProjectile : public BaseProjectile
 {
 public:

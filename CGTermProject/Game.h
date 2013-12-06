@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "StateHandler.h"
 
+// game class is current instance of play
 class Game
 {
 public:

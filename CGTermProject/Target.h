@@ -19,10 +19,12 @@ public:
 private:
 	float m_radius;
 
+	// target is made of two planes (circles)
 	Plane m_nearPlane;
 	Plane m_farPlane;
 
     unsigned char color[ 3 ];
 
+	// deals with after update procedures
 	virtual void postUpdate();
 };

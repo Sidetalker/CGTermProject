@@ -16,17 +16,17 @@ BaseState* StateHandler::m_pCurState = 0;
 
 StateHandler::StateHandler()
 {
-	// TODO: currently a default game state, maybe have an intro state
-	// TODO: currently a hardcoded current state, change earlier
+	// title state is first state to load
 	m_pCurState = new TitleState();
 
+	// set all the callbacks for GLUT
 	glutKeyboardFunc( keyInput );
 	glutDisplayFunc( update );
 	glutReshapeFunc( resize );
 	glutTimerFunc( 5, animate, 1 );
 	glutMouseFunc( mouseAction );
 	glutPassiveMotionFunc( mouseMotion );
-	glutMotionFunc( mouseMotion ); // TODO: Should they be separate functions?
+	glutMotionFunc( mouseMotion );
 }
 
 
@@ -35,6 +35,7 @@ StateHandler::~StateHandler()
 	delete m_pCurState;
 }
 
+// changes state to brand new object
 void StateHandler::changeState( StateTypes::id newState )
 {
 	delete m_pCurState;
@@ -58,11 +59,14 @@ void StateHandler::changeState( StateTypes::id newState )
 	}
 }
 
+// main driving animate callback
 void StateHandler::animate( int value )
 {
 	glutTimerFunc(5, animate, 1);
 	glutPostRedisplay();
 }
+
+// all GLUT callbacks
 
 void StateHandler::update()
 {

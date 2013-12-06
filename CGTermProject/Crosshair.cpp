@@ -9,7 +9,7 @@
 #endif
 
 static const float SCALE = .25;
-static const float PI = 3.141592653589793238462643383279502884; // TODO: get const from somewhere else
+static const float PI = 3.141592653589793238462643383279502884;
 
 Crosshair::Crosshair() :
   GameObject( Vector() )
@@ -21,6 +21,7 @@ Crosshair::~Crosshair()
 {
 }
 
+// draws crosshair to mouse position
 void Crosshair::draw()
 {
 	glDisable( GL_LIGHTING );

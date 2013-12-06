@@ -7,6 +7,7 @@ public:
 	BaseState();
 	virtual ~BaseState();
 
+	// virtual functions called by StateHandler
 	virtual void update() = 0;
 	virtual void keyInput( unsigned char key, int x, int y ) = 0;
 	virtual void mouseAction( int button, int state, int x, int y ) = 0;

@@ -14,13 +14,13 @@ FileReader::~FileReader()
 {
 }
 
+// reads Data/TargetData.txt and creates Target objects in the heap
 void FileReader::readTargets( std::vector< BaseTarget* >& targets )
 {
 	int typeInt;
 	float speed;
 	float xPos, yPos, zPos;
 	uint numKeyFrames;
-	float keyX, keyY, keyZ;
 	bool repeating;
 	float rotSpeed;
 	float rotAxisX, rotAxisY, rotAxisZ;
@@ -35,6 +35,7 @@ void FileReader::readTargets( std::vector< BaseTarget* >& targets )
 
 	file >> typeInt;
 
+	// keep reading target data until delimeter is met
 	while ( typeInt != -1 )
 	{
 		TargetTypes::id type = ( TargetTypes::id ) typeInt;
@@ -64,6 +65,7 @@ void FileReader::readTargets( std::vector< BaseTarget* >& targets )
 
 		file >> numKeyFrames;
 
+		// get all keyframes
 		for ( uint i = 1; i < numKeyFrames; ++i )
 		{
 			float keyX, keyY, keyZ;
@@ -83,6 +85,7 @@ void FileReader::readTargets( std::vector< BaseTarget* >& targets )
 
 }
 
+// adds high scores from Data/HighScoreData.txt to vector
 void FileReader::readHighScores( std::vector< Score >& scores )
 {
 	std::ifstream file( "Data/HighScoreData.txt" );
@@ -99,17 +102,18 @@ void FileReader::readHighScores( std::vector< Score >& scores )
 	while ( file >> score )
 	{
 		file >> initials;
-
-		scores.push_back( Score( score, initials ) );
+		
+		scores.push_back( Score( (int)score, initials ) );
 	}
 
-	// populate with at least 10 values
+	// populate with at least 10 values (if initially empy or incomplete file)
 	while ( scores.size() != 10 )
 	{
 		scores.push_back( Score( 1, "AAA" ) );
 	}
 }
 
+// writes current highscores to disk
 void FileReader::writeHighScores( std::vector< Score >& scores )
 {
 	std::ofstream file( "Data/HighScoreData.txt" );
